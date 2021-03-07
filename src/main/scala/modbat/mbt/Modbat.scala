@@ -32,6 +32,11 @@ import modbat.util.FieldUtil
 import scala.math._
 import scala.util.Random
 import com.miguno.akka.testing.VirtualTime
+import modbat.graph.Edge
+import modbat.graphadaptor.{EdgeData, GraphAdaptor, StateData}
+
+import scala.collection.mutable
+import scala.collection.mutable.Set
 
 class NoTaskException(message: String = null, cause: Throwable = null)
     extends RuntimeException(message, cause)
@@ -381,7 +386,63 @@ class Modbat(val mbt: MBT) {
       mbt.log.info(
         modelStr + nCoveredTrans + " transitions covered (" +
           nCoveredTrans * 100 / nTrans + " % out of " + nTrans + ").")
+
+      // display edge-pair coverage (nodes, edges, edge-pairs)
+      val coveredStates = modelInst.states.values.count(_.coverage.isCovered)
+      val totalStates = modelInst.states.size
+      val statesCoveredPercent = if (totalStates == 0) 100.0d else coveredStates * 100.0d / totalStates
+
+      val coveredEdges = modelInst.graph.getEdgesCovered
+      val totalEdges = modelInst.graph.getTotalEdges
+      val edgesCoveredPercent = if (totalEdges == 0) 100.0d else coveredEdges * 100.0d / totalEdges
+
+      val coveredEdgePairs = modelInst.graph.getEdgePairsCovered
+      val totalEdgePairs = modelInst.graph.getTotalEdgePairs
+      val edgePairsCoveredPercent = if (totalEdgePairs == 0) 100.0d else coveredEdgePairs * 100.0d / totalEdgePairs
+
+      mbt.log.info(s"$modelName: States covered (NEW): $coveredStates, Total: $totalStates, " +
+        s"Percent: ${BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
+
+      mbt.log.info(s"$modelName: Edges covered (NEW): $coveredEdges, Total: $totalEdges, " +
+        s"Percent: ${BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
+
+      mbt.log.info(s"$modelName: Edge-pairs covered (NEW): $coveredEdgePairs, Total: $totalEdgePairs, " +
+        s"Percent: ${BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
+
+      // edge-pair coverage including nodes, edges, edge-pairs
+      val coveredEdgePairsIncl = coveredStates + coveredEdges + coveredEdgePairs
+      val totalEdgePairsIncl = totalStates + totalEdges + totalEdgePairs
+      val edgePairsInclCoveredPercent = if (totalEdgePairsIncl == 0) 100.0d else
+        coveredEdgePairsIncl * 100.0d / totalEdgePairsIncl
+
+      mbt.log.info(s"$modelName: Edge-pairs (including nodes, edge, edge-pairs) covered (NEW): $coveredEdgePairsIncl, " +
+        s"Total: $totalEdgePairsIncl, " +
+        s"Percent: ${BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
+
+      val coverageInfoOut = new PrintStream(mbt.config.logPath + File.separator +
+        modelName + "_" + mbt.config.randomSeed.toHexString + "_coverage.txt")
+
+      // output to file for later analysis
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "NODES",
+        coveredStates.toString, totalStates.toString,
+        BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
+
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGES",
+        coveredEdges.toString, totalEdges.toString,
+        BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
+
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGE_PAIRS",
+        coveredEdgePairs.toString, totalEdgePairs.toString,
+        BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
+
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGE_PAIRS_INCLUSIVE",
+        coveredEdgePairsIncl.toString, totalEdgePairsIncl.toString,
+        BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
+
+      coverageInfoOut.flush()
+      coverageInfoOut.close()
     }
+
     preconditionCoverage
     randomSeed = (masterRNG.z << 32 | masterRNG.w)
     mbt.log.info("Random seed for next test would be: " + randomSeed.toHexString)
@@ -787,14 +848,47 @@ class Modbat(val mbt: MBT) {
                    val failed: Boolean,
                    val isObserver: Boolean)
 
+  /**
+    * Covers test requirements of type: edge-pair coverage (includes edge-coverage).
+    */
+  def coverTestRequirements(path: ListBuffer[PathInfo]): Unit = {
+    // get all unique (model class, model id) pairs
+    val modelClassesModelIDs: mutable.Set[(String, Int)] = mutable.Set()
+    for (pathInfo <- path) {
+      modelClassesModelIDs.add((pathInfo.modelName, pathInfo.modelID))
+    }
+
+    // filter path using every unique (model class, mode id) pair
+    for ((modelName, modelID) <- modelClassesModelIDs) {
+      val firstModelInstance = mbt.firstInstance.getOrElse(modelName, {
+        sys.error(s"No first model instance: $modelName")
+      })
+
+      val pathToCover: ListBuffer[EdgeData] = path.
+        filter(pathInfo => pathInfo.modelName == modelName && pathInfo.modelID == modelID &&
+          pathInfo.transitionQuality == TransitionQuality.OK).
+        // map each pathInfo to either the overriding transition (i.e, nextState transition) or
+        // the original transition depending on whether the overriding transition (i.e., nextState
+        // transition) exists or not
+        map(pathInfo => if (pathInfo.nextState != null) pathInfo.nextState else pathInfo.transition).
+        // convert each transition to EdgeData (which is the common format of edges used by graph
+        // of type GraphAdaptor)
+        map(transition => firstModelInstance.graph.createEdgeData(transition))
+
+      firstModelInstance.graph.coverTestRequirements(pathToCover)
+    }
+  }
+
   def exploreSuccessors: (TransitionResult, RecordedTransition) = {
     executeSuccessorTrans match {
       case ((Finished, _), _) => {
         insertPathInfoInTrie
+        coverTestRequirements(this.pathInfoRecorder)
         (Ok(), null)
       }
       case (result: (TransitionResult, RecordedTransition),
             pathResult: PathResult) => {
+        coverTestRequirements(this.pathInfoRecorder)
         if (!pathResult.isObserver) {
           storePathInfo(pathResult.result,
                         pathResult.successor,
@@ -960,7 +1054,8 @@ class Modbat(val mbt: MBT) {
                                            model.mIdx,
                                            trans,
                                            nextStateNextIf,
-                                           TransitionQuality.OK)
+                                           TransitionQuality.OK,
+                                           result._2.nextState)
         } else {
           val nextStateNextIf =
             trans.getNextStateNextIf(result._2.transition.dest, false)

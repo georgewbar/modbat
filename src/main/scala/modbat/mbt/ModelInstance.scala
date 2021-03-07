@@ -31,6 +31,9 @@ import modbat.trace.TransitionResult
 import modbat.dsl.Weight
 import modbat.log.Log
 
+import modbat.graphadaptor.GraphAdaptor
+import java.io.File
+
 class ModelInstance (val mbt: MBT, val model: Model,
                      val trans: List[Transition]) {
   val className = model.getClass.getName
@@ -47,6 +50,9 @@ class ModelInstance (val mbt: MBT, val model: Model,
   @volatile var staying = false
   val mIdx = mbt.launchedModels.count(_.className.equals(className)) // mIdx gives the ID of the model -Rui
   def name = className + "-" + (mIdx + 1)
+
+  // graph instance of model
+  var graph: GraphAdaptor = _
 
   /* isChild is true when coverage information of initial instance is
    * to be re-used; this is the case when a child is launched, but also
@@ -112,6 +118,7 @@ class ModelInstance (val mbt: MBT, val model: Model,
   }
 
   def addAndLaunch(firstLaunch: Boolean) = {
+    var isFirstInstance = false
     if (mbt.firstInstance.contains(className)) {
       val master =
          initChildInstance(className, trans.toArray)
@@ -119,6 +126,7 @@ class ModelInstance (val mbt: MBT, val model: Model,
       registerStateSelfTrans(model, true)
       TransitionCoverage.reuseCoverageInfo(this, master, className)
     } else {
+      isFirstInstance = true
       mbt.firstInstance.put(className, this)
       init (false)
       regSynthTrans(false)
@@ -140,6 +148,16 @@ class ModelInstance (val mbt: MBT, val model: Model,
     mbt.launchedModelInst += model
     currentState = initialState
     StateCoverage.cover(initialState)
+
+    // get first instance of model to add the graph to it
+//    val firstModelInstance: ModelInstance = mbt.firstInstance.getOrElse(this.className, sys.error("Illegal state"))
+    if (isFirstInstance) {
+      val graph: GraphAdaptor = new GraphAdaptor(mbt.config, this)
+      graph.printGraphTo(mbt.config.dotDir + File.separator + this.className + "_graph.dot")
+      graph.updateTestRequirements()
+      this.graph = graph
+    }
+
     this
   }
 
