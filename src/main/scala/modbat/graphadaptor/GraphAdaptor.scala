@@ -5,8 +5,9 @@ import modbat.graph.{Edge, Graph, Node}
 import modbat.mbt.{Configuration, ModelInstance}
 
 import java.io.{File, FileOutputStream, IOException, PrintStream}
-import scala.collection.JavaConverters.{asScalaBufferConverter, asScalaSetConverter}
+import scala.collection.JavaConverters.{asScalaBufferConverter, asScalaSetConverter, bufferAsJavaListConverter}
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
   // log that could be used for debugging purposes
@@ -192,7 +193,7 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
     * Create (and return) edge data for "transition" whether it is a normal transition
     * or an expected exception transition.
     */
-  private def createEdgeData(transition: Transition): EdgeData = {
+  def createEdgeData(transition: Transition): EdgeData = {
     val transitionLabel: String = getTransitionLabel(transition)
     if (transition.expectedExceptions.isEmpty) {
       new EdgeData(
@@ -259,28 +260,14 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
     }
   }
 
-  //  def dotify(coverage: Boolean = false): Unit = {
-  //    val ret = init
-  //    out.println("digraph model {")
-  //    out.println("  orientation = landscape;")
-  //    out.println("  graph [ rankdir = \"TB\", ranksep=\"0.4\", nodesep=\"0.2\" ];")
-  //    out.println("  node [ fontname = \"Helvetica\", fontsize=\"12.0\"," +
-  //      " margin=\"0.07\" ];")
-  //    out.println("  edge [ fontname = \"Helvetica\", fontsize=\"12.0\"," +
-  //      " margin=\"0.05\" ];")
-  //    // initial state
-  //    out.println("  \"\" [ shape = \"point\", height=\"0.1\" ];")
-  //    out.println("  \"\" -> " + toLabel(model.initialState))
-  //    for (tr <- model.transitions) {
-  //      if (!tr.isSynthetic) {
-  //        dotifyEdge(tr)
-  //
-  //        for (exc <- tr.nonDetExceptions) {
-  //          val label = exc.exception.toString.replace("Exception", "Exc.")
-  //          printTrans(exc.target, label, style = "dotted", color = "red")
-  //        }
-  //      }
-  //    }
-  //    out.println("}")
-  //  }
+  def coverTestRequirements(path: ListBuffer[EdgeData]): Unit = {
+    this.graph.coverTestRequirements(
+      path.map(edgeData => new Edge(edgeData.originState, edgeData.destinationState, edgeData)).asJava
+    )
+  }
+
+  def updateTestRequirements(): Unit = {
+    this.graph.updateTestRequirements()
+  }
+
 }

@@ -14,7 +14,7 @@ case class ExpectedExceptionTransition(isDeterministic: Boolean) extends Transit
 class StateData(val state: State) {
 
   override def equals(other: Any): Boolean = {
-    if (!other.isInstanceOf[StateData]) {
+    if (other == null || !other.isInstanceOf[StateData]) {
       false
     } else {
       val that: StateData = other.asInstanceOf[StateData]
@@ -37,7 +37,7 @@ class EdgeData(val transitionLabel: String, val transitionType: TransitionType, 
   val transitionId: Int = transition.idx // ask Cyrille if transition.idx is changed during the execution
 
   override def equals(other: Any): Boolean = {
-    if (!other.isInstanceOf[EdgeData]) {
+    if (other == null || !other.isInstanceOf[EdgeData]) {
       false
     } else {
       val that: EdgeData = other.asInstanceOf[EdgeData]

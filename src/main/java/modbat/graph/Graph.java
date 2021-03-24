@@ -1,5 +1,8 @@
 package modbat.graph;
 
+import modbat.graph.testrequirements.EdgePairTestRequirement;
+import modbat.graph.testrequirements.EdgeTestRequirement;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -7,6 +10,9 @@ import java.util.stream.Collectors;
 public class Graph<NT, ET> {
     private Node<NT> root;
     private final Map<Node<NT>, List<Edge<NT, ET>>> adjacencyMap;
+
+    private Map<EdgeTestRequirement<NT, ET>, EdgeTestRequirement<NT, ET>> edgesReqs = new HashMap<>();
+    private Map<EdgePairTestRequirement<NT, ET>, EdgePairTestRequirement<NT, ET>> edgePairsReqs = new HashMap<>();
 
     public Graph() {
         this(null);
@@ -75,6 +81,97 @@ public class Graph<NT, ET> {
         return getAllEdges().stream().filter(edge -> edge.getDestination().equals(to)).collect(Collectors.toList());
     }
 
+    /**
+     * Update edge-pair requirements (this includes even individual edges
+     * as well. This is done to make edge-pairs test requirements subsume edges test
+     * requirements).
+     * <p>
+     * Note that the edge pairs that already exist are not changed. i.e., if the edge-pairs
+     * were covered, this will not change, and if the edge-pairs were not covered, they will
+     * remain uncovered. Only new edge-pairs can be added, but the old ones remain the same.
+     */
+    private void updateEdgePairRequirements() {
+        Map<EdgeTestRequirement<NT, ET>, EdgeTestRequirement<NT, ET>> oldReqs = new HashMap<>(edgesReqs);
+        // add all edges to to edgesTestRequirements
+
+        // TODO: delete this part later
+        // sanity check
+        for (Edge<NT, ET> edge : getAllEdges()) {
+            EdgeTestRequirement<NT, ET> edgeReq = new EdgeTestRequirement<>(edge);
+            edgesReqs.put(edgeReq, edgeReq);
+        }
+
+//        if (!edgesReqs.equals(oldReqs)) {
+//            System.out.println("The old edge requirements and the new edge requirements are not equal.");
+//            throw new IllegalStateException("The old edge requirements and the new edge requirements are not equal.");
+//        }
+
+        // add all (incoming, outgoing) pairs in edgePairsTestRequirements
+        for (Node<NT> node : getAllNodes()) {
+            for (Edge<NT, ET> incoming : incomingEdges(node)) {
+                for (Edge<NT, ET> outgoing : outgoingEdges(node)) {
+                    EdgePairTestRequirement<NT, ET> edgePair = new EdgePairTestRequirement<>(incoming, outgoing);
+                    edgePairsReqs.putIfAbsent(edgePair, edgePair);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update all test requirements of type:
+     * <p>
+     * - edge-pair (this includes even individual edges
+     * as well. This is done to make edge-pairs test requirements subsume edges test
+     * requirements).
+     * <p>
+     * Update edge-pair requirements. Note that the edge pairs that already exist are
+     * not changed. i.e., if the edge-pairs were covered, this will not change, and
+     * if the edge-pairs were not covered, they will remain uncovered. Only new edge-pairs
+     * can be added, but the old ones remain the same.
+     */
+    public void updateTestRequirements() {
+        updateEdgePairRequirements();
+    }
+
+    /**
+     * Cover edge-pair test requirements that path covers.
+     */
+    private void coverEdgePairs(List<Edge<NT, ET>> path) {
+        // cover all edges
+        System.out.println("we are here");
+        for (int i = 0; i < path.size(); i++) {
+            EdgeTestRequirement<NT, ET> edge = edgesReqs.get(new EdgeTestRequirement<>(path.get(i)));
+
+            if (edge == null) {
+                // TODO: throw IllegalStateException later
+                System.err.println("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
+            } else {
+                edge.setCovered(true);
+            }
+        }
+
+        // cover all edge-pairs
+        for (int i = 1; i < path.size(); i++) {
+            EdgePairTestRequirement<NT, ET> edgePair = edgePairsReqs.get(
+                    new EdgePairTestRequirement<>(path.get(i - 1), path.get(i))
+            );
+
+            if (edgePair == null) {
+                // TODO: throw IllegalStateException later
+                System.err.println("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
+            } else {
+                edgePair.setCovered(true);
+            }
+        }
+    }
+
+    /**
+     * Covers test requirements that path covers.
+     */
+    public void coverTestRequirements(List<Edge<NT, ET>> path) {
+        coverEdgePairs(path);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -91,6 +188,4 @@ public class Graph<NT, ET> {
 
         return sb.toString();
     }
-
-
 }

@@ -26,7 +26,11 @@ import modbat.util.FieldUtil
 import scala.math._
 import scala.util.Random
 import com.miguno.akka.testing.VirtualTime
-import modbat.graphadaptor.GraphAdaptor
+import modbat.graph.Edge
+import modbat.graphadaptor.{EdgeData, GraphAdaptor, StateData}
+
+import scala.collection.mutable
+import scala.collection.mutable.Set
 
 class NoTaskException(message: String = null, cause: Throwable = null)
     extends RuntimeException(message, cause)
@@ -385,6 +389,8 @@ class Modbat(val mbt: MBT) {
         new Dotify(mbt.config, modelInst, modelName + ".dot").dotify(true)
       }
     }
+
+    // display
   }
 
   object ShutdownHandler extends Thread {
@@ -467,6 +473,7 @@ class Modbat(val mbt: MBT) {
     if (firstModelInstance.graph == null) {
       val graph: GraphAdaptor = new GraphAdaptor(mbt.config, model)
       graph.printGraphTo(firstModelInstance.className + "_graph.dot")
+      graph.updateTestRequirements()
       firstModelInstance.graph = graph
     }
 
@@ -792,11 +799,44 @@ class Modbat(val mbt: MBT) {
                    val failed: Boolean,
                    val isObserver: Boolean)
 
+  /**
+    * Covers test requirements of type: edge-pair coverage (includes edge-coverage).
+    */
+  def coverTestRequirements(path: ListBuffer[PathInfo]): Unit = {
+    // ask Cyrille if NextStateNextIf should be used
+
+    // log all backtracked and fail pathInfo
+    path.foreach(pathInfo => {
+      if (pathInfo.transitionQuality != TransitionQuality.OK) {
+        println(s"path info includes a non-OK transition: ${pathInfo.toString}")
+        mbt.log.debug(s"path info includes a non-OK transition: ${pathInfo.toString}")
+      }
+    })
+
+    // get all unique (model class, model id) pairs
+    val modelClassesModelIDs: mutable.Set[(String, Int)] = mutable.Set()
+    for (pathInfo <- path) {
+      modelClassesModelIDs.add((pathInfo.modelName, pathInfo.modelID))
+    }
+
+    // filter path using every unique (model class, mode id) pair
+    for ((modelName, modelID) <- modelClassesModelIDs) {
+      val firstModelInstance = mbt.firstInstance.getOrElse(modelName, sys.error(s"No first model instance: $modelName"))
+
+      val pathToCover: ListBuffer[EdgeData] = path.
+        filter(pathInfo => pathInfo.modelName == modelName && pathInfo.modelID == modelID &&
+        pathInfo.transitionQuality == TransitionQuality.OK).
+        map(pathInfo => firstModelInstance.graph.createEdgeData(pathInfo.transition))
+
+      firstModelInstance.graph.coverTestRequirements(pathToCover)
+    }
+  }
+
   def exploreSuccessors: (TransitionResult, RecordedTransition) = {
     executeSuccessorTrans match {
       case ((Finished, _), _) => {
         insertPathInfoInTrie
-        // George: cover using pathInfoRecorder
+        coverTestRequirements(this.pathInfoRecorder)
         (Ok(), null)
       }
       case (result: (TransitionResult, RecordedTransition),

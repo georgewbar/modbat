@@ -1,25 +1,24 @@
 digraph model {
-
   graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
   node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
   edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
   "" [ shape = "point", height="0.1" ];
   "" -> reset
-  connected	-> connected [ label = " readFrom " ]; // done
-  connected	-> bound [ label = " close " ]; // done
-  bound	-> bound [ label = " toggleBlocking " ]; // done
-  bound	-> connected [ label = " accept " ]; // done
-  bound	-> accepting [ label = " startClient " ]; // done
-  bound	-> closed [ label = " close " ]; // done
-  reset	-> open [ label = " open " ]; // done
-  accepting	-> accepting [ label = " accept " ]; // done
-  accepting	-> connected [ label = " (accept) " style = "dashed" ]; // done
-  accepting	-> bound [ label = " interrupt " ]; // done
-  accepting	-> closed [ label = " close " ]; // done
-  open	-> open [ label = " toggleBlocking " ]; // done
-  open	-> bound [ label = " getLocalPort " ]; // done
-  open	-> err [ label = " NotYetBoundException " color = "red" ]; // done
-  open	-> closed [ label = " close " ]; // done
-  closed	-> closed [ label = " close " ]; // done
-  closed	-> err [ label = " ClosedChannelException " color = "red" ]; // done
+  connected	-> connected [ label = " connected => connected " ];
+  connected	-> bound [ label = " connected => bound " ];
+  bound	-> bound [ label = " bound => bound " ];
+  bound	-> connected [ label = " bound => connected " ];
+  bound	-> accepting [ label = " bound => accepting " ];
+  bound	-> closed [ label = " bound => closed " ];
+  reset	-> open [ label = " reset => open " ];
+  accepting	-> accepting [ label = " accepting => accepting " ];
+  accepting	-> connected [ label = " (accepting => accepting) " style = "dashed" ];
+  accepting	-> bound [ label = " accepting => bound " ];
+  accepting	-> closed [ label = " accepting => closed " ];
+  open	-> open [ label = " open => open " ];
+  open	-> bound [ label = " open => bound " ];
+  open	-> err [ label = " NotYetBoundException " color = "red" ];
+  open	-> closed [ label = " open => closed " ];
+  closed	-> closed [ label = " closed => closed " ];
+  closed	-> err [ label = " ClosedChannelException " color = "red" ];
 }
