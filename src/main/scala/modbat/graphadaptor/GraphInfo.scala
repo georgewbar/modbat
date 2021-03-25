@@ -29,6 +29,10 @@ class StateData(val state: State) {
   override def hashCode(): Int = {
     state.name.hashCode()
   }
+
+  override def toString: String = {
+    state.toString
+  }
 }
 
 class EdgeData(val transitionLabel: String, val transitionType: TransitionType, val transition: Transition) {
@@ -50,6 +54,10 @@ class EdgeData(val transitionLabel: String, val transitionType: TransitionType, 
 
   override def hashCode(): Int = {
     transitionId.hashCode()
+  }
+
+  override def toString: String = {
+    transition.toString()
   }
 }
 

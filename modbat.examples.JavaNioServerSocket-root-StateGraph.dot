@@ -1,0 +1,12 @@
+digraph model {
+  orientation = portrait;
+  graph [ rankdir = "TB", ranksep="0.08", nodesep="0.18", size="8!" ];
+  node [ fontname = "Helvetica", fontsize="11.0", shape="ellipse", margin="0.01", height="0.1", width="0.5" ];
+  edge [ fontname = "Helvetica", arrowsize=".3", arrowhead="normal", fontsize="6.0", margin="0.05" ];
+None [shape=none, style=invis, width=0.1, height=0.1];
+None->reset;
+{rank = source; None}
+reset->open[penwidth="2.0043213737826426",label = " "];open->err[penwidth="1.6334684555795864",label = " "];open->open[penwidth="1.4313637641589874",label = " "];open->closed[penwidth="1.462397997898956",label = " "];closed->err[penwidth="1.7075701760979363",label = " "];closed->closed[penwidth="1.3979400086720377",label = " "];open->bound[penwidth="1.4913616938342726",label = " "];bound->bound[penwidth="1.2787536009528289",label = " "];bound->closed[penwidth="1.3222192947339193",label = " "];bound->bound[style=dotted, color=blue,penwidth="1.2304489213782739",label = " "];bound->connected[penwidth="1.4913616938342726",label = " "];connected->bound[penwidth="1.4313637641589874",label = " "];connected->connected[penwidth="1.3222192947339193",label = " "];connected->connected[color=red,penwidth="0.9542425094393249",label = " "];bound->bound[style=dotted, color=blue,penwidth="0.6989700043360189",label = " "];bound->accepting[penwidth="1.1139433523068367",label = " "];"7-0-true-OK-1" [label="true" , shape=diamond, width=0.2, height=0.3, fontsize=11, xlabel=""];
+accepting->"7-0-true-OK-1"[penwidth="0.47712125471966244",label = " "];"7-0-true-OK-1"->accepting[penwidth="0.47712125471966244",label = " "];accepting->connected[style=dotted];"7-0-false-OK-2" [label="false" , shape=diamond, width=0.2, height=0.3, fontsize=11, xlabel=""];
+accepting->"7-0-false-OK-2"[penwidth="0.6989700043360189",label = " "];"7-0-false-OK-2"->accepting[penwidth="0.6989700043360189",label = " "];"7-0-true-OK-3" [label="true" , shape=diamond, width=0.2, height=0.3, fontsize=11, xlabel=""];
+accepting->"7-0-true-OK-3"[penwidth="0.47712125471966244",label = " "];"7-0-true-OK-3"->accepting[penwidth="0.47712125471966244",label = " "];accepting->closed[penwidth="0.47712125471966244",label = " "];accepting->bound[penwidth="0.8450980400142568",label = " "];}

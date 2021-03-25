@@ -270,4 +270,15 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
     this.graph.updateTestRequirements()
   }
 
+  def getCoverageInfo: List[String] = {
+    this.graph.getCoverageInfo.asScala.toList
+  }
+
+  def setOutStream(out: PrintStream): Unit = {
+    this.graph.setOutStream(out)
+  }
+
+  def setErrStream(err: PrintStream): Unit = {
+    this.graph.setErrStream(err)
+  }
 }

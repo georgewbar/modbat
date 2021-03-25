@@ -1,8 +1,10 @@
 package modbat.graph;
 
+import modbat.graph.testrequirements.AbstractTestRequirement;
 import modbat.graph.testrequirements.EdgePairTestRequirement;
 import modbat.graph.testrequirements.EdgeTestRequirement;
 
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,13 +16,17 @@ public class Graph<NT, ET> {
     private Map<EdgeTestRequirement<NT, ET>, EdgeTestRequirement<NT, ET>> edgesReqs = new HashMap<>();
     private Map<EdgePairTestRequirement<NT, ET>, EdgePairTestRequirement<NT, ET>> edgePairsReqs = new HashMap<>();
 
-    public Graph() {
-        this(null);
-    }
+    // log
+    private PrintStream out;
+    private PrintStream err;
+
+    public Graph() { this(null); }
 
     public Graph(Node<NT> root) {
         this.root = root;
-        adjacencyMap = new HashMap<>();
+        this.adjacencyMap = new HashMap<>();
+        this.out = null;
+        this.err = null;
     }
 
     public void setRoot(Node<NT> root) {
@@ -137,14 +143,16 @@ public class Graph<NT, ET> {
      * Cover edge-pair test requirements that path covers.
      */
     private void coverEdgePairs(List<Edge<NT, ET>> path) {
-        // cover all edges
-        System.out.println("we are here");
+        printToOut("path: ");
+        printToOut(path.toString()); // todo: comment later
+        // cover all edges - This should be printed.
+//        printToOut("we are here");
         for (int i = 0; i < path.size(); i++) {
             EdgeTestRequirement<NT, ET> edge = edgesReqs.get(new EdgeTestRequirement<>(path.get(i)));
 
             if (edge == null) {
                 // TODO: throw IllegalStateException later
-                System.err.println("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
+                printToErr("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
             } else {
                 edge.setCovered(true);
             }
@@ -158,11 +166,13 @@ public class Graph<NT, ET> {
 
             if (edgePair == null) {
                 // TODO: throw IllegalStateException later
-                System.err.println("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
+                printToErr("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
             } else {
                 edgePair.setCovered(true);
             }
         }
+
+        edgePairsReqs.forEach((key, value) -> printToOut(value.toString()));
     }
 
     /**
@@ -170,6 +180,46 @@ public class Graph<NT, ET> {
      */
     public void coverTestRequirements(List<Edge<NT, ET>> path) {
         coverEdgePairs(path);
+    }
+
+    /**
+     * Add edge pair coverage (includes individual edges as well) in a string builder
+     */
+    private List<String> getEdgePairsCoverageInfo(List<String> stringList) {
+        // calculate edges coverage
+        int noOfEdgesCovered = edgesReqs.keySet().stream().
+                filter(AbstractTestRequirement::isCovered).
+                collect(Collectors.toSet()).size();
+        int totalNoOfEdges = edgesReqs.size();
+        double percentOfEdgesCovered = noOfEdgesCovered * 1.0d / totalNoOfEdges * 100d;
+        stringList.add("Edges covered: " + noOfEdgesCovered + ", total edges: " + totalNoOfEdges +
+                ", percent: " + percentOfEdgesCovered + " %");
+
+        // calculate edge-pair coverage as well
+        int noOfEdgePairsCovered = edgePairsReqs.keySet().stream().
+                filter(AbstractTestRequirement::isCovered).
+                collect(Collectors.toSet()).size();
+        int totalNoOfEdgePairs = edgePairsReqs.size();
+        double percentOfEdgePairsCovered = noOfEdgePairsCovered * 1.0d / totalNoOfEdgePairs * 100d;
+        stringList.add("Edge-pairs covered: " + noOfEdgePairsCovered + ", total edges: " + totalNoOfEdgePairs +
+                ", percent: " + percentOfEdgePairsCovered + " %");
+
+        // calculate edge-pair and edges in total
+        int noOfBothCovered = noOfEdgesCovered + noOfEdgePairsCovered;
+        int totalOfBoth = totalNoOfEdges + totalNoOfEdgePairs;
+        double percentOfBoth = noOfBothCovered * 1.0d / totalOfBoth * 100d;
+        stringList.add("Edge-pairs (including edges) covered: " + noOfBothCovered + ", total (both): " + totalOfBoth +
+                ", percent: " + percentOfBoth + " %");
+
+        return stringList;
+    }
+
+    /**
+     * Print coverage info to a given print stream.
+     */
+    public List<String> getCoverageInfo() {
+        List<String> stringList = new ArrayList<>();
+        return getEdgePairsCoverageInfo(stringList);
     }
 
     @Override
@@ -187,5 +237,25 @@ public class Graph<NT, ET> {
         }
 
         return sb.toString();
+    }
+
+    public void setOutStream(PrintStream out) {
+        this.out = out;
+    }
+
+    public void setErrStream(PrintStream err) {
+        this.err = err;
+    }
+
+    private void printToOut(String line) {
+        if (this.out != null) {
+            this.out.println(line);
+        }
+    }
+
+    private void printToErr(String line) {
+        if (this.err != null) {
+            this.err.println(line);
+        }
     }
 }

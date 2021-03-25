@@ -28,6 +28,6 @@ public class Node<NT> {
 
     @Override
     public String toString() {
-        return "\"" + data.toString() + "\"";
+        return data.toString() ;
     }
 }

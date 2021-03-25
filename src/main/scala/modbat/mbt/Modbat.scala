@@ -120,6 +120,7 @@ class Modbat(val mbt: MBT) {
         val model = mbt.launch(null)
         val result = exploreModel(model)
         mbt.cleanup()
+        println()
         mbt.log.out = origOut
         mbt.log.err = origErr
         result
@@ -166,6 +167,7 @@ class Modbat(val mbt: MBT) {
         Console.print("[2K\r")
       }
     }
+
   }
 
   def showErrors: Unit = {
@@ -380,6 +382,9 @@ class Modbat(val mbt: MBT) {
       mbt.log.info(
         modelStr + nCoveredTrans + " transitions covered (" +
           nCoveredTrans * 100 / nTrans + " % out of " + nTrans + ").")
+
+      // display edge-pair coverage - George
+      modelInst.graph.getCoverageInfo.foreach(line => mbt.log.info(modelStr + line))
     }
     preconditionCoverage
     randomSeed = (masterRNG.z << 32 | masterRNG.w)
@@ -389,8 +394,6 @@ class Modbat(val mbt: MBT) {
         new Dotify(mbt.config, modelInst, modelName + ".dot").dotify(true)
       }
     }
-
-    // display
   }
 
   object ShutdownHandler extends Thread {
@@ -425,9 +428,12 @@ class Modbat(val mbt: MBT) {
       randomSeed = getRandomSeed
       val seed = randomSeed.toHexString
       failed match {
-        case 0 => mbt.log.out.printf("%8d %16s", Integer.valueOf(i), seed)
-        case 1 => mbt.log.out.printf("%8d %16s, one test failed.", Integer.valueOf(i), seed)
-        case _ => mbt.log.out.printf("%8d %16s, %d tests failed.", Integer.valueOf(i), seed, Integer.valueOf(failed))
+        case 0 =>
+          mbt.log.out.printf("%8d %16s%n", Integer.valueOf(i), seed) // TODO: delete %n
+        case 1 =>
+          mbt.log.out.printf("%8d %16s, one test failed.%n", Integer.valueOf(i), seed) // todo: delete %n
+        case _ =>
+          mbt.log.out.printf("%8d %16s, %d tests failed.%n", Integer.valueOf(i), seed, Integer.valueOf(failed)) // todo: delete %n
       }
       logFile = mbt.config.logPath + "/" + seed + ".log"
       errFile = mbt.config.logPath + "/" + seed + ".err"
@@ -474,6 +480,8 @@ class Modbat(val mbt: MBT) {
       val graph: GraphAdaptor = new GraphAdaptor(mbt.config, model)
       graph.printGraphTo(firstModelInstance.className + "_graph.dot")
       graph.updateTestRequirements()
+      graph.setOutStream(origOut) // TODO: comment later or change to work in debug mode
+      graph.setErrStream(origErr) // TODO: comment later or change to work in debug mode
       firstModelInstance.graph = graph
     }
 
@@ -808,8 +816,9 @@ class Modbat(val mbt: MBT) {
     // log all backtracked and fail pathInfo
     path.foreach(pathInfo => {
       if (pathInfo.transitionQuality != TransitionQuality.OK) {
-        println(s"path info includes a non-OK transition: ${pathInfo.toString}")
-        mbt.log.debug(s"path info includes a non-OK transition: ${pathInfo.toString}")
+        // TODO: comment this part later
+        origOut.println(s"path info includes a non-OK transition: ${pathInfo.toString}")
+        mbt.log.info(s"path info includes a non-OK transition: ${pathInfo.toString}")
       }
     })
 

@@ -46,4 +46,9 @@ public class EdgePairTestRequirement<NT, ET> extends AbstractTestRequirement {
     public int hashCode() {
         return Objects.hash(_1, _2);
     }
+
+    @Override
+    public String toString() {
+        return "EdgePair(" + _1 + ", " + _2 + "): " + isCovered();
+    }
 }

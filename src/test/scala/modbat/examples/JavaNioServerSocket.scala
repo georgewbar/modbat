@@ -96,7 +96,7 @@ class JavaNioServerSocket extends Model {
   "accepting" -> "accepting" := {
     assert(client != null)
     connection = null
-    maybe (connection = ch.accept())
+    maybe ({ connection = ch.accept() })
   } nextIf { () => connection != null} -> "connected"
   "connected" -> "connected" := {
     readFrom(connection)

@@ -50,6 +50,6 @@ public class Edge<NT, ET> {
 
     @Override
     public String toString() {
-        return "edge: " + (from != null ? from.toString() : null) + " -> " + (to != null ? to.toString() : null);
+        return data.toString();
     }
 }
