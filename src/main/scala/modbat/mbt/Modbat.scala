@@ -835,7 +835,13 @@ class Modbat(val mbt: MBT) {
       val pathToCover: ListBuffer[EdgeData] = path.
         filter(pathInfo => pathInfo.modelName == modelName && pathInfo.modelID == modelID &&
         pathInfo.transitionQuality == TransitionQuality.OK).
-        map(pathInfo => firstModelInstance.graph.createEdgeData(pathInfo.transition))
+        // map each pathInfo to either the overriding transition (i.e, nextState transition) or
+        // the original transition depending on whether the overriding transition (i.e., nextState
+        // transition) exists or not
+        map(pathInfo => if (pathInfo.nextState != null) pathInfo.nextState else pathInfo.transition).
+        // convert each transition to EdgeData (which is the common format of edges used by graph
+        // of type GraphAdaptor)
+        map(transition => firstModelInstance.graph.createEdgeData(transition))
 
       firstModelInstance.graph.coverTestRequirements(pathToCover)
     }
@@ -1015,7 +1021,8 @@ class Modbat(val mbt: MBT) {
                                            model.mIdx,
                                            trans,
                                            nextStateNextIf,
-                                           TransitionQuality.OK)
+                                           TransitionQuality.OK,
+                                            result._2.nextState)
         } else {
           val nextStateNextIf =
             trans.getNextStateNextIf(result._2.transition.dest, false)

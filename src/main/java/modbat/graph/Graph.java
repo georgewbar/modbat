@@ -172,7 +172,7 @@ public class Graph<NT, ET> {
             }
         }
 
-        edgePairsReqs.forEach((key, value) -> printToOut(value.toString()));
+//        edgePairsReqs.forEach((key, value) -> printToOut(value.toString()));
     }
 
     /**
