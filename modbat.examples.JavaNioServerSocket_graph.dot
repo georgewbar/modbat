@@ -4,21 +4,21 @@ digraph model {
   edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
   "" [ shape = "point", height="0.1" ];
   "" -> reset
-  connected	-> connected [ label = " readFrom " ];
-  connected	-> bound [ label = " close " ];
-  bound	-> bound [ label = " toggleBlocking " ];
-  bound	-> connected [ label = " accept " ];
-  bound	-> accepting [ label = " startClient " ];
-  bound	-> closed [ label = " close " ];
-  reset	-> open [ label = " open " ];
-  accepting	-> accepting [ label = " accept " ];
-  accepting	-> connected [ label = " (accept) " style = "dashed" ];
-  accepting	-> bound [ label = " interrupt " ];
-  accepting	-> closed [ label = " close " ];
-  open	-> open [ label = " toggleBlocking " ];
-  open	-> bound [ label = " getLocalPort " ];
+  connected	-> connected [ label = " connected => connected " ];
+  connected	-> bound [ label = " connected => bound " ];
+  bound	-> bound [ label = " bound => bound " ];
+  bound	-> connected [ label = " bound => connected " ];
+  bound	-> accepting [ label = " bound => accepting " ];
+  bound	-> closed [ label = " bound => closed " ];
+  reset	-> open [ label = " reset => open " ];
+  accepting	-> accepting [ label = " accepting => accepting " ];
+  accepting	-> connected [ label = " (accepting => accepting) " style = "dashed" ];
+  accepting	-> bound [ label = " accepting => bound " ];
+  accepting	-> closed [ label = " accepting => closed " ];
+  open	-> open [ label = " open => open " ];
+  open	-> bound [ label = " open => bound " ];
   open	-> err [ label = " NotYetBoundException " color = "red" ];
-  open	-> closed [ label = " close " ];
-  closed	-> closed [ label = " close " ];
+  open	-> closed [ label = " open => closed " ];
+  closed	-> closed [ label = " closed => closed " ];
   closed	-> err [ label = " ClosedChannelException " color = "red" ];
 }

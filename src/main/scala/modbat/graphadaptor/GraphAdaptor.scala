@@ -5,7 +5,7 @@ import modbat.graph.{Edge, Graph, Node}
 import modbat.mbt.{Configuration, ModelInstance}
 
 import java.io.{File, FileOutputStream, IOException, PrintStream}
-import scala.collection.JavaConverters.{asScalaBufferConverter, asScalaSetConverter, bufferAsJavaListConverter}
+import scala.collection.JavaConverters.{asScalaBufferConverter, asScalaSetConverter, bufferAsJavaListConverter, mapAsScalaMapConverter}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
@@ -270,8 +270,24 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
     this.graph.updateTestRequirements()
   }
 
-  def getCoverageInfo: List[String] = {
-    this.graph.getCoverageInfo.asScala.toList
+  def getEdgesCovered: Int = {
+    this.graph.getCoverageInfoKeyPairs.asScala.getOrElse(Graph.EDGES_COVERED,
+      throw new IllegalStateException("there should be edges covered info"))
+  }
+
+  def getTotalEdges: Int = {
+    this.graph.getCoverageInfoKeyPairs.asScala.getOrElse(Graph.TOTAL_EDGES,
+      throw new IllegalStateException("there should be total edges info"))
+  }
+
+  def getEdgePairsCovered: Int = {
+    this.graph.getCoverageInfoKeyPairs.asScala.getOrElse(Graph.EDGE_PAIRS_COVERED,
+      throw new IllegalStateException("there should be edge-pairs covered info"))
+  }
+
+  def getTotalEdgePairs: Int = {
+    this.graph.getCoverageInfoKeyPairs.asScala.getOrElse(Graph.TOTAL_EDGE_PAIRS,
+      throw new IllegalStateException("there should be total edge-pairs info"))
   }
 
   def setOutStream(out: PrintStream): Unit = {

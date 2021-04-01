@@ -3,7 +3,6 @@ package modbat.graph;
 import modbat.graph.testrequirements.AbstractTestRequirement;
 import modbat.graph.testrequirements.EdgePairTestRequirement;
 import modbat.graph.testrequirements.EdgeTestRequirement;
-
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,8 +12,13 @@ public class Graph<NT, ET> {
     private Node<NT> root;
     private final Map<Node<NT>, List<Edge<NT, ET>>> adjacencyMap;
 
-    private Map<EdgeTestRequirement<NT, ET>, EdgeTestRequirement<NT, ET>> edgesReqs = new HashMap<>();
-    private Map<EdgePairTestRequirement<NT, ET>, EdgePairTestRequirement<NT, ET>> edgePairsReqs = new HashMap<>();
+    private final Map<EdgeTestRequirement<NT, ET>, EdgeTestRequirement<NT, ET>> edgesReqs = new HashMap<>();
+    private final Map<EdgePairTestRequirement<NT, ET>, EdgePairTestRequirement<NT, ET>> edgePairsReqs = new HashMap<>();
+
+    public final static String EDGES_COVERED = "EDGES_COVERED";
+    public final static String TOTAL_EDGES = "TOTAL_EDGES";
+    public final static String EDGE_PAIRS_COVERED = "EDGE_PAIRS_COVERED";
+    public final static String TOTAL_EDGE_PAIRS = "TOTAL_EDGE_PAIRS";
 
     // log
     private PrintStream out;
@@ -97,20 +101,12 @@ public class Graph<NT, ET> {
      * remain uncovered. Only new edge-pairs can be added, but the old ones remain the same.
      */
     private void updateEdgePairRequirements() {
-        Map<EdgeTestRequirement<NT, ET>, EdgeTestRequirement<NT, ET>> oldReqs = new HashMap<>(edgesReqs);
-        // add all edges to to edgesTestRequirements
 
-        // TODO: delete this part later
-        // sanity check
+        // add all edges to edgesTestRequirements
         for (Edge<NT, ET> edge : getAllEdges()) {
             EdgeTestRequirement<NT, ET> edgeReq = new EdgeTestRequirement<>(edge);
             edgesReqs.put(edgeReq, edgeReq);
         }
-
-//        if (!edgesReqs.equals(oldReqs)) {
-//            System.out.println("The old edge requirements and the new edge requirements are not equal.");
-//            throw new IllegalStateException("The old edge requirements and the new edge requirements are not equal.");
-//        }
 
         // add all (incoming, outgoing) pairs in edgePairsTestRequirements
         for (Node<NT> node : getAllNodes()) {
@@ -143,18 +139,16 @@ public class Graph<NT, ET> {
      * Cover edge-pair test requirements that path covers.
      */
     private void coverEdgePairs(List<Edge<NT, ET>> path) {
-        printToOut("path: ");
-        printToOut(path.toString()); // todo: comment later
-        // cover all edges - This should be printed.
-//        printToOut("we are here");
-        for (int i = 0; i < path.size(); i++) {
-            EdgeTestRequirement<NT, ET> edge = edgesReqs.get(new EdgeTestRequirement<>(path.get(i)));
+//        printToOut("path: ");
+//        printToOut(path.toString());
 
-            if (edge == null) {
-                // TODO: throw IllegalStateException later
-                printToErr("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
+        // cover all edges
+        for (Edge<NT, ET> edge : path) {
+            EdgeTestRequirement<NT, ET> edgeReq = edgesReqs.get(new EdgeTestRequirement<>(edge));
+            if (edgeReq == null) {
+                printToErr("edgeReq: (" + edge + ") does not exist");
             } else {
-                edge.setCovered(true);
+                edgeReq.setCovered(true);
             }
         }
 
@@ -165,8 +159,7 @@ public class Graph<NT, ET> {
             );
 
             if (edgePair == null) {
-                // TODO: throw IllegalStateException later
-                printToErr("edge pair: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
+                printToErr("edge-pairReq: (" + path.get(i - 1) + ", " + path.get(i) + ") does not exist");
             } else {
                 edgePair.setCovered(true);
             }
@@ -214,13 +207,30 @@ public class Graph<NT, ET> {
         return stringList;
     }
 
-    /**
-     * Print coverage info to a given print stream.
-     */
-    public List<String> getCoverageInfo() {
-        List<String> stringList = new ArrayList<>();
-        return getEdgePairsCoverageInfo(stringList);
+    public Map<String, Integer> getCoverageInfoKeyPairs() {
+        Map<String, Integer> kp = new HashMap<>();
+        kp.put(EDGES_COVERED, edgesReqs.keySet().stream().
+                filter(AbstractTestRequirement::isCovered).
+                collect(Collectors.toSet()).size());
+
+        kp.put(TOTAL_EDGES, edgesReqs.size());
+
+        kp.put(EDGE_PAIRS_COVERED, edgePairsReqs.keySet().stream().
+                filter(AbstractTestRequirement::isCovered).
+                collect(Collectors.toSet()).size());
+
+        kp.put(TOTAL_EDGE_PAIRS, edgePairsReqs.size());
+
+        return kp;
     }
+
+//    /**
+//     * Print coverage info to a given print stream.
+//     */
+//    public List<String> getCoverageInfo() {
+//        List<String> stringList = new ArrayList<>();
+//        return getEdgePairsCoverageInfo(stringList);
+//    }
 
     @Override
     public String toString() {
