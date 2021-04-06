@@ -11,7 +11,8 @@ import scala.collection.mutable.ListBuffer
 
 class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
   // log that could be used for debugging purposes
-  private val log = model.mbt.log
+  //  private val log = model.mbt.log
+  private var errStream: PrintStream = _;
 
   /*
      "graph" is a public field representing the model instance.
@@ -110,7 +111,7 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
   def printGraphTo(fileName: String): Unit = {
     val out: PrintStream = getPrintStream(fileName)
     out.println("digraph model {")
-//    out.println("  orientation = landscape;")
+    //    out.println("  orientation = landscape;")
     out.println("  graph [ rankdir = \"TB\", ranksep=\"0.4\", nodesep=\"0.2\" ];")
     out.println("  node [ fontname = \"Helvetica\", fontsize=\"12.0\"," +
       " margin=\"0.07\" ];")
@@ -158,8 +159,8 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
       new PrintStream(new FileOutputStream(pathOfOutputFile), false, "UTF-8")
     } catch {
       case ioe: IOException =>
-        log.error("Cannot open file " + pathOfOutputFile + ":")
-        log.error(ioe.getMessage)
+        printToErr("Cannot open file " + pathOfOutputFile + ":")
+        printToErr(ioe.getMessage)
         throw ioe
     }
   }
@@ -290,11 +291,18 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
       throw new IllegalStateException("there should be total edge-pairs info"))
   }
 
+  private def printToErr(message: String): Unit = {
+    if (this.errStream != null) {
+      this.errStream.println(message)
+    }
+  }
+
   def setOutStream(out: PrintStream): Unit = {
     this.graph.setOutStream(out)
   }
 
   def setErrStream(err: PrintStream): Unit = {
+    this.errStream = err
     this.graph.setErrStream(err)
   }
 }
