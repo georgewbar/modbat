@@ -401,13 +401,13 @@ class Modbat(val mbt: MBT) {
       val totalEdgePairs = modelInst.graph.getTotalEdgePairs
       val edgePairsCoveredPercent = if (totalEdgePairs == 0) 100.0d else coveredEdgePairs * 100.0d / totalEdgePairs
 
-      mbt.log.info(s"States covered (NEW): $coveredStates, Total: $totalStates, " +
+      mbt.log.info(s"$modelName: States covered (NEW): $coveredStates, Total: $totalStates, " +
         s"Percent: ${BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
 
-      mbt.log.info(s"Edges covered (NEW): $coveredEdges, Total: $totalEdges, " +
+      mbt.log.info(s"$modelName: Edges covered (NEW): $coveredEdges, Total: $totalEdges, " +
         s"Percent: ${BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
 
-      mbt.log.info(s"Edge-pairs covered (NEW): $coveredEdgePairs, Total: $totalEdgePairs, " +
+      mbt.log.info(s"$modelName: Edge-pairs covered (NEW): $coveredEdgePairs, Total: $totalEdgePairs, " +
         s"Percent: ${BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
 
       // edge-pair coverage including nodes, edges, edge-pairs
@@ -416,7 +416,7 @@ class Modbat(val mbt: MBT) {
       val edgePairsInclCoveredPercent = if (totalEdgePairsIncl == 0) 100.0d else
         coveredEdgePairsIncl * 100.0d / totalEdgePairsIncl
 
-      mbt.log.info(s"Edge-pairs (including nodes, edge, edge-pairs) covered (NEW): $coveredEdgePairsIncl, " +
+      mbt.log.info(s"$modelName: Edge-pairs (including nodes, edge, edge-pairs) covered (NEW): $coveredEdgePairsIncl, " +
         s"Total: $totalEdgePairsIncl, " +
         s"Percent: ${BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
 
@@ -424,16 +424,16 @@ class Modbat(val mbt: MBT) {
         mbt.config.randomSeed.toHexString + "_coverage.txt")
 
       // output to file for later analysis
-      coverageInfoOut.printf("%s %s %s%n", coveredStates.toString, totalStates.toString,
+      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredStates.toString, totalStates.toString,
         BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
-      coverageInfoOut.printf("%s %s %s%n", coveredEdges.toString, totalEdges.toString,
+      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredEdges.toString, totalEdges.toString,
         BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
-      coverageInfoOut.printf("%s %s %s%n", coveredEdgePairs.toString, totalEdgePairs.toString,
+      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredEdgePairs.toString, totalEdgePairs.toString,
         BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
-      coverageInfoOut.printf("%s %s %s%n", coveredEdgePairsIncl.toString, totalEdgePairsIncl.toString,
+      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredEdgePairsIncl.toString, totalEdgePairsIncl.toString,
         BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
       coverageInfoOut.flush()
