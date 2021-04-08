@@ -424,16 +424,20 @@ class Modbat(val mbt: MBT) {
         mbt.config.randomSeed.toHexString + "_coverage.txt")
 
       // output to file for later analysis
-      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredStates.toString, totalStates.toString,
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "NODES",
+        coveredStates.toString, totalStates.toString,
         BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
-      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredEdges.toString, totalEdges.toString,
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGES",
+        coveredEdges.toString, totalEdges.toString,
         BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
-      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredEdgePairs.toString, totalEdgePairs.toString,
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGE_PAIRS",
+        coveredEdgePairs.toString, totalEdgePairs.toString,
         BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
-      coverageInfoOut.printf("%s: %s %s %s%n", modelName, coveredEdgePairsIncl.toString, totalEdgePairsIncl.toString,
+      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGE_PAIRS_INCLUSIVE",
+        coveredEdgePairsIncl.toString, totalEdgePairsIncl.toString,
         BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
 
       coverageInfoOut.flush()
