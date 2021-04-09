@@ -533,17 +533,17 @@ class Modbat(val mbt: MBT) {
     mbt.log.debug("--- Exploring model ---")
     // create the graph - George and Nour
 
-//     get first instance of model to add the graph to it
-    val firstModelInstance: ModelInstance = mbt.firstInstance.getOrElse(model.className, sys.error("Illegal state"))
-    if (firstModelInstance.graph == null) {
-      origOut.println("Creating model:.... " + model.className)
-      val graph: GraphAdaptor = new GraphAdaptor(mbt.config, model)
-      graph.printGraphTo(mbt.config.dotDir + File.separator + firstModelInstance.className + "_graph.dot")
-      graph.updateTestRequirements()
-//      graph.setOutStream(origOut) // TODO: comment later or change to work in debug mode
-//      graph.setErrStream(origErr) // TODO: comment later or change to work in debug mode
-      firstModelInstance.graph = graph
-    }
+////     get first instance of model to add the graph to it
+//    val firstModelInstance: ModelInstance = mbt.firstInstance.getOrElse(model.className, sys.error("Illegal state"))
+//    if (firstModelInstance.graph == null) {
+//      origOut.println("Creating model:.... " + model.className)
+//      val graph: GraphAdaptor = new GraphAdaptor(mbt.config, model)
+//      graph.printGraphTo(mbt.config.dotDir + File.separator + firstModelInstance.className + "_graph.dot")
+//      graph.updateTestRequirements()
+////      graph.setOutStream(origOut) // TODO: comment later or change to work in debug mode
+////      graph.setErrStream(origErr) // TODO: comment later or change to work in debug mode
+//      firstModelInstance.graph = graph
+//    }
 
     timesVisited.clear()
     executedTransitions.clear()
