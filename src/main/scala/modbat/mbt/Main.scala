@@ -14,11 +14,17 @@ object Main {
   def main(args: Array[String]): Unit = {
     Modbat.isUnitTest = false
     val config = new Configuration()
+    val oldErr = Console.err
+    val oldOut = Console.out
+
     val log = new Log(Console.out, Console.err)
     try {
       run(args, config, log)
     } catch {
-      case e: Exception => System.exit(1)
+      case e: Exception =>
+//        throw e // todo: George remove later
+//          e.printStackTrace(oldOut) // todo: George remove later
+        System.exit(1)
     }
     System.exit(0)
   }
@@ -61,7 +67,8 @@ object Main {
       }
     }
 
-    val mbt = new MBT(config, log)
+    val origLog = new Log(Console.out, Console.err) // TODO: comment later
+    val mbt = new MBT(config, log, origLog)
     log.setLevel(config.logLevel)
     setup(config, mbt, modelClassName) // TODO: refactor into case code below once needed
 

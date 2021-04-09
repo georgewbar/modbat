@@ -1,0 +1,24 @@
+digraph model {
+  graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
+  node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
+  edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
+  "" [ shape = "point", height="0.1" ];
+  "" -> main
+  main	-> main [ label = " hasNext " ];
+  main	-> modifiable [ label = " next " ];
+  main	-> modifiable [ label = " previous " ];
+  main	-> main [ label = " add " ];
+  main	-> main [ label = " IllegalStateException " color = "red" ];
+  main	-> main [ label = " IllegalStateException " color = "red" ];
+  main	-> main [ label = " checkIdx " ];
+  main	-> main [ label = " ConcurrentModificationException " color = "red" ];
+  main	-> main [ label = " NoSuchElementException " color = "red" ];
+  modifiable	-> modifiable [ label = " next " ];
+  modifiable	-> modifiable [ label = " previous " ];
+  modifiable	-> main [ label = " add " ];
+  modifiable	-> modifiable [ label = " set " ];
+  modifiable	-> main [ label = " remove " ];
+  modifiable	-> modifiable [ label = " checkIdx " ];
+  modifiable	-> modifiable [ label = " ConcurrentModificationException " color = "red" ];
+  modifiable	-> modifiable [ label = " NoSuchElementException " color = "red" ];
+}

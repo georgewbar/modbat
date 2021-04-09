@@ -533,14 +533,15 @@ class Modbat(val mbt: MBT) {
     mbt.log.debug("--- Exploring model ---")
     // create the graph - George and Nour
 
-    // get first instance of model to add the graph to it
+//     get first instance of model to add the graph to it
     val firstModelInstance: ModelInstance = mbt.firstInstance.getOrElse(model.className, sys.error("Illegal state"))
     if (firstModelInstance.graph == null) {
+      origOut.println("Creating model:.... " + model.className)
       val graph: GraphAdaptor = new GraphAdaptor(mbt.config, model)
       graph.printGraphTo(mbt.config.dotDir + File.separator + firstModelInstance.className + "_graph.dot")
       graph.updateTestRequirements()
-      graph.setOutStream(origOut) // TODO: comment later or change to work in debug mode
-      graph.setErrStream(origErr) // TODO: comment later or change to work in debug mode
+//      graph.setOutStream(origOut) // TODO: comment later or change to work in debug mode
+//      graph.setErrStream(origErr) // TODO: comment later or change to work in debug mode
       firstModelInstance.graph = graph
     }
 
@@ -871,12 +872,20 @@ class Modbat(val mbt: MBT) {
     */
   def coverTestRequirements(path: ListBuffer[PathInfo]): Unit = {
     // ask Cyrille if NextStateNextIf should be used
+//    path.foreach(pathInfo => {
+//      if (pathInfo.nextState != null)
+//        origOut.print(pathInfo.nextState)
+//      else
+//        origOut.print(pathInfo.transition)
+//    })
+//
+//    origOut.println()
 
     // log all backtracked and fail pathInfo
     path.foreach(pathInfo => {
       if (pathInfo.transitionQuality != TransitionQuality.OK) {
         // TODO: comment this part later
-        origOut.println(s"path info includes a non-OK transition: ${pathInfo.toString}")
+//        origOut.println(s"path info includes a non-OK transition: ${pathInfo.toString}")
         mbt.log.info(s"path info includes a non-OK transition: ${pathInfo.toString}")
       }
     })
@@ -889,7 +898,11 @@ class Modbat(val mbt: MBT) {
 
     // filter path using every unique (model class, mode id) pair
     for ((modelName, modelID) <- modelClassesModelIDs) {
-      val firstModelInstance = mbt.firstInstance.getOrElse(modelName, sys.error(s"No first model instance: $modelName"))
+//      origOut.println(s"#-#-#-#-#-#-# modelName: $modelName, $modelID")
+      val firstModelInstance = mbt.firstInstance.getOrElse(modelName, {
+//        origOut.println(s"No first model instance: $modelName")
+        sys.error(s"No first model instance: $modelName")
+      })
 
       val pathToCover: ListBuffer[EdgeData] = path.
         filter(pathInfo => pathInfo.modelName == modelName && pathInfo.modelID == modelID &&
@@ -907,14 +920,16 @@ class Modbat(val mbt: MBT) {
   }
 
   def exploreSuccessors: (TransitionResult, RecordedTransition) = {
+
     executeSuccessorTrans match {
       case ((Finished, _), _) => {
         insertPathInfoInTrie
-        coverTestRequirements(this.pathInfoRecorder)
+        coverTestRequirements(this.pathInfoRecorder) // George
         (Ok(), null)
       }
       case (result: (TransitionResult, RecordedTransition),
       pathResult: PathResult) => {
+        coverTestRequirements(this.pathInfoRecorder) // George
         if (!pathResult.isObserver) {
           storePathInfo(pathResult.result,
             pathResult.successor,

@@ -1,4 +1,4 @@
-modbat.examples.ChooseTest: 2 3 66.67
-modbat.examples.ChooseTest: 2 3 66.67
-modbat.examples.ChooseTest: 2 3 66.67
-modbat.examples.ChooseTest: 6 9 66.67
+modbat.examples.listit.ListIteratorModel - [NODES]: 1 2 50.00
+modbat.examples.listit.ListIteratorModel - [EDGES]: 3 17 17.65
+modbat.examples.listit.ListIteratorModel - [EDGE_PAIRS]: 9 145 6.21
+modbat.examples.listit.ListIteratorModel - [EDGE_PAIRS_INCLUSIVE]: 13 164 7.93

@@ -5,14 +5,20 @@ import modbat.dsl._
 class ExampleModel extends Model {
   var x = 1
 
-  // transitions
   "reset" -> "zero" := {
-    if (true) {
-      throw new IllegalArgumentException("")
-    } else {
-
-    }
+    require(false)
   }
+
+  "reset" -> "one" := skip
+
+  // transitions
+//  "reset" -> "zero" := {
+//    if (true) {
+//      throw new IllegalArgumentException("")
+//    } else {
+//
+//    }
+//  }
 
 //  "reset" -> "zero" := {
 //    if (true) {

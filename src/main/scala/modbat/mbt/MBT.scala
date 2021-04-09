@@ -69,7 +69,7 @@ object MBT {
   }
 }
 
-class MBT (val config: Configuration, val log: Log) {
+class MBT (val config: Configuration, val log: Log, val origLog: Log = null) {
   var modelClass: Class[_ <: Any] = null // main model class
   val launchedModels = new ArrayBuffer[ModelInstance]()
   val launchedModelInst = new ArrayBuffer[Model]()

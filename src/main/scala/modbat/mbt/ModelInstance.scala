@@ -30,6 +30,8 @@ import modbat.dsl.Weight
 import modbat.graphadaptor.GraphAdaptor
 import modbat.log.Log
 
+import java.io.File
+
 class ModelInstance (val mbt: MBT, val model: Model,
                      val trans: List[Transition]) {
   val className = model.getClass.getName
@@ -114,6 +116,7 @@ class ModelInstance (val mbt: MBT, val model: Model,
   }
 
   def addAndLaunch(firstLaunch: Boolean) = {
+    var isFirstInstance = false
     if (mbt.firstInstance.contains(className)) {
       val master =
          initChildInstance(className, trans.toArray)
@@ -121,6 +124,7 @@ class ModelInstance (val mbt: MBT, val model: Model,
       registerStateSelfTrans(model, true)
       TransitionCoverage.reuseCoverageInfo(this, master, className)
     } else {
+      isFirstInstance = true
       mbt.firstInstance.put(className, this)
       init (false)
       regSynthTrans(false)
@@ -142,6 +146,18 @@ class ModelInstance (val mbt: MBT, val model: Model,
     mbt.launchedModelInst += model
     currentState = initialState
     StateCoverage.cover(initialState)
+
+    // get first instance of model to add the graph to it
+//    val firstModelInstance: ModelInstance = mbt.firstInstance.getOrElse(this.className, sys.error("Illegal state"))
+    if (isFirstInstance) {
+      val graph: GraphAdaptor = new GraphAdaptor(mbt.config, this)
+      graph.printGraphTo(mbt.config.dotDir + File.separator + this.className + "_graph.dot")
+      graph.updateTestRequirements()
+//      graph.setOutStream(mbt.origLog.out) // TODO: comment later or change to work in debug mode
+//      graph.setErrStream(mbt.origLog.err) // TODO: comment later or change to work in debug mode
+      this.graph = graph
+    }
+
     this
   }
 
