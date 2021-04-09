@@ -1,4 +1,4 @@
-modbat.examples.ExampleModel - [NODES]: 2 3 66.67
-modbat.examples.ExampleModel - [EDGES]: 1 2 50.00
-modbat.examples.ExampleModel - [EDGE_PAIRS]: 0 0 100.00
-modbat.examples.ExampleModel - [EDGE_PAIRS_INCLUSIVE]: 3 5 60.00
+modbat.examples.JavaNioServerSocket - [NODES]: 7 7 100.00
+modbat.examples.JavaNioServerSocket - [EDGES]: 0 17 0.00
+modbat.examples.JavaNioServerSocket - [EDGE_PAIRS]: 0 46 0.00
+modbat.examples.JavaNioServerSocket - [EDGE_PAIRS_INCLUSIVE]: 7 70 10.00

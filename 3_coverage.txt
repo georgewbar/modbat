@@ -1,4 +1,0 @@
-modbat.examples.listit.ListIteratorModel - [NODES]: 1 2 50.00
-modbat.examples.listit.ListIteratorModel - [EDGES]: 3 17 17.65
-modbat.examples.listit.ListIteratorModel - [EDGE_PAIRS]: 3 145 2.07
-modbat.examples.listit.ListIteratorModel - [EDGE_PAIRS_INCLUSIVE]: 7 164 4.27

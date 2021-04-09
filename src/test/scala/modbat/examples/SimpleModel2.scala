@@ -30,11 +30,11 @@ class SimpleModel2 extends Model {
   "two" -> "end" := {
     assert (counter.value == 2)
   }
-  "ran_num" -> "ran_num_p_1" := {
+  "ran_num" -> "ran_num_p_2" := {
     require(counter.value == 3)
     counter.inc2
   }
-  "ran_num_p_1" -> "end" := {
+  "ran_num_p_2" -> "end" := {
     assert(counter.value == 5)
   }
 }

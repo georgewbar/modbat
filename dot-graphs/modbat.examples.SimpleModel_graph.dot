@@ -1,0 +1,13 @@
+digraph model {
+  graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
+  node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
+  edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
+  "" [ shape = "point", height="0.1" ];
+  "" -> reset
+  one	-> two [ label = " one => two " ];
+  reset	-> zero [ label = " reset => zero " ];
+  two	-> end [ label = " two => end " ];
+  zero	-> zero [ label = " zero => zero " ];
+  zero	-> one [ label = " zero => one " ];
+  zero	-> two [ label = " zero => two " ];
+}
