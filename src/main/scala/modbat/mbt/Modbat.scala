@@ -421,7 +421,7 @@ class Modbat(val mbt: MBT) {
         s"Percent: ${BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
 
       val coverageInfoOut = new PrintStream(mbt.config.logPath + File.separator +
-        mbt.config.randomSeed.toHexString + "_coverage.txt")
+        modelName + "_" + mbt.config.randomSeed.toHexString + "_coverage.txt")
 
       // output to file for later analysis
       coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "NODES",

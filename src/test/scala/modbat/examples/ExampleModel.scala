@@ -6,10 +6,10 @@ class ExampleModel extends Model {
   var x = 1
 
   "reset" -> "zero" := {
-    require(false)
+    assert(false)
   }
 
-  "reset" -> "one" := skip
+//  "reset" -> "one" := skip
 
   // transitions
 //  "reset" -> "zero" := {
