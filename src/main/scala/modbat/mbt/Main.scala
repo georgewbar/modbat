@@ -23,7 +23,7 @@ object Main {
     } catch {
       case e: Exception =>
 //        throw e // todo: George remove later
-//          e.printStackTrace(oldOut) // todo: George remove later
+          e.printStackTrace(oldOut) // todo: George remove later
         System.exit(1)
     }
     System.exit(0)

@@ -1,0 +1,4 @@
+modbat.examples.listit.LinkedListModel - [NODES]: 1 1 100.00
+modbat.examples.listit.LinkedListModel - [EDGES]: 5 5 100.00
+modbat.examples.listit.LinkedListModel - [EDGE_PAIRS]: 14 25 56.00
+modbat.examples.listit.LinkedListModel - [EDGE_PAIRS_INCLUSIVE]: 20 31 64.52

@@ -1,0 +1,36 @@
+digraph model {
+  graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
+  node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
+  edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
+  "" [ shape = "point", height="0.1" ];
+  "" -> main
+  main	-> modifiable [ label = " next " ];
+  main	-> main [ label = " NoSuchElementException " color = "red" ];
+  main	-> main [ label = " ConcurrentModificationException, IllegalStateException " color = "red" ];
+  main	-> main [ label = " IllegalStateException " color = "red" ];
+  main	-> modifiable [ label = " previous " ];
+  main	-> main [ label = " add " ];
+  main	-> main [ label = " IllegalStateException " color = "red" ];
+  main	-> main [ label = " ConcurrentModification " color = "red" ];
+  main	-> main [ label = " hasNext " ];
+  main	-> main [ label = " ConcurrentModification " color = "red" ];
+  main	-> main [ label = " ConcurrentModification " color = "red" ];
+  main	-> main [ label = " NoSuchElementException " color = "red" ];
+  main	-> main [ label = " hasPrevious " ];
+  main	-> main [ label = " nextIndex " ];
+  main	-> main [ label = " previousIndex " ];
+  modifiable	-> modifiable [ label = " next " ];
+  modifiable	-> modifiable [ label = " ConcurrentModificationException " color = "red" ];
+  modifiable	-> main [ label = " remove " ];
+  modifiable	-> modifiable [ label = " previous " ];
+  modifiable	-> modifiable [ label = " set " ];
+  modifiable	-> main [ label = " add " ];
+  modifiable	-> modifiable [ label = " ConcurrentModification " color = "red" ];
+  modifiable	-> modifiable [ label = " hasNext " ];
+  modifiable	-> modifiable [ label = " ConcurrentModification " color = "red" ];
+  modifiable	-> modifiable [ label = " ConcurrentModification " color = "red" ];
+  modifiable	-> modifiable [ label = " NoSuchElementException " color = "red" ];
+  modifiable	-> modifiable [ label = " hasPrevious " ];
+  modifiable	-> modifiable [ label = " nextIndex " ];
+  modifiable	-> modifiable [ label = " previousIndex " ];
+}

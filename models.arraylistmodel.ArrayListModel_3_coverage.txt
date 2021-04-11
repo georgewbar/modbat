@@ -1,0 +1,4 @@
+models.arraylistmodel.ArrayListModel - [NODES]: 1 1 100.00
+models.arraylistmodel.ArrayListModel - [EDGES]: 0 11 0.00
+models.arraylistmodel.ArrayListModel - [EDGE_PAIRS]: 0 121 0.00
+models.arraylistmodel.ArrayListModel - [EDGE_PAIRS_INCLUSIVE]: 1 133 0.75

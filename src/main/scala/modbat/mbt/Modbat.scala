@@ -886,7 +886,7 @@ class Modbat(val mbt: MBT) {
       if (pathInfo.transitionQuality != TransitionQuality.OK) {
         // TODO: comment this part later
 //        origOut.println(s"path info includes a non-OK transition: ${pathInfo.toString}")
-        mbt.log.info(s"path info includes a non-OK transition: ${pathInfo.toString}")
+//        mbt.log.info(s"path info includes a non-OK transition: ${pathInfo.toString}")
       }
     })
 
