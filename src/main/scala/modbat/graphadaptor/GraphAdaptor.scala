@@ -154,7 +154,7 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
   }
 
   private def getPrintStream(outputFileName: String): PrintStream = {
-    val pathOfOutputFile: String = config.dotDir + File.separatorChar + outputFileName
+    val pathOfOutputFile: String = outputFileName
     try {
       new PrintStream(new FileOutputStream(pathOfOutputFile), false, "UTF-8")
     } catch {
