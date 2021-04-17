@@ -1,4 +1,0 @@
-modbat.examples.NioSocket1 - [NODES]: 3 6 50.00
-modbat.examples.NioSocket1 - [EDGES]: 0 20 0.00
-modbat.examples.NioSocket1 - [EDGE_PAIRS]: 0 61 0.00
-modbat.examples.NioSocket1 - [EDGE_PAIRS_INCLUSIVE]: 3 87 3.45

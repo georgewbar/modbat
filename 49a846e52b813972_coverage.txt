@@ -1,4 +1,0 @@
-modbat.examples.SimpleModel - [NODES]: 4 5 80.00
-modbat.examples.SimpleModel - [EDGES]: 0 6 0.00
-modbat.examples.SimpleModel - [EDGE_PAIRS]: 0 9 0.00
-modbat.examples.SimpleModel - [EDGE_PAIRS_INCLUSIVE]: 4 20 20.00

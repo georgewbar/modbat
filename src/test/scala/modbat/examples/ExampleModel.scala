@@ -5,6 +5,8 @@ import modbat.dsl._
 class ExampleModel extends Model {
   var x = 1
 
+  "reset" -> "one" := skip
+
   "reset" -> "zero" := {
     assert(false)
   }

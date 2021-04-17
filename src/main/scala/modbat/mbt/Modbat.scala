@@ -168,7 +168,7 @@ class Modbat(val mbt: MBT) {
         System.setErr(orig)
       } else {
         System.setOut(orig)
-        Console.print("[2K\r")
+//        Console.print("[2K\r") // TODO: change later
       }
     }
 

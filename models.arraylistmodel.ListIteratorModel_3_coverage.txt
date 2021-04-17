@@ -1,4 +1,0 @@
-models.arraylistmodel.ListIteratorModel - [NODES]: 2 2 100.00
-models.arraylistmodel.ListIteratorModel - [EDGES]: 0 29 0.00
-models.arraylistmodel.ListIteratorModel - [EDGE_PAIRS]: 0 421 0.00
-models.arraylistmodel.ListIteratorModel - [EDGE_PAIRS_INCLUSIVE]: 2 452 0.44
