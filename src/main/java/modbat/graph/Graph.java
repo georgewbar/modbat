@@ -7,7 +7,6 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//adapted from https://algorithms.tutorialhorizon.com/weighted-graph-implementation-java/
 public class Graph<NT, ET> {
     private Node<NT> root;
     private final Map<Node<NT>, List<Edge<NT, ET>>> adjacencyMap;
@@ -139,9 +138,6 @@ public class Graph<NT, ET> {
      * Cover edge-pair test requirements that path covers.
      */
     private void coverEdgePairs(List<Edge<NT, ET>> path) {
-//        printToOut("path: ");
-//        printToOut(path.toString());
-
         // cover all edges
         for (Edge<NT, ET> edge : path) {
             EdgeTestRequirement<NT, ET> edgeReq = edgesReqs.get(new EdgeTestRequirement<>(edge));
@@ -164,8 +160,6 @@ public class Graph<NT, ET> {
                 edgePair.setCovered(true);
             }
         }
-
-//        edgePairsReqs.forEach((key, value) -> printToOut(value.toString()));
     }
 
     /**
@@ -223,14 +217,6 @@ public class Graph<NT, ET> {
 
         return kp;
     }
-
-//    /**
-//     * Print coverage info to a given print stream.
-//     */
-//    public List<String> getCoverageInfo() {
-//        List<String> stringList = new ArrayList<>();
-//        return getEdgePairsCoverageInfo(stringList);
-//    }
 
     @Override
     public String toString() {

@@ -1,9 +1,0 @@
-digraph model {
-  orientation = portrait;
-  graph [ rankdir = "TB", ranksep="0.1", nodesep="0.05", size="8!" ];
-  node [ fontname = "Helvetica", fontsize="6.0", shape="point", margin="0.01", height="0.1", width="0.5" ];
-  edge [ fontname = "Helvetica", arrowsize=".3", arrowhead="normal", fontsize="6.0", margin="0.05" ];
-None [shape=none, style=invis, width=0.1, height=0.1]
-None->0
-{rank = source; None}
-0->1[penwidth="2.0043213737826426",label = "  "];1->2[penwidth="1.4913616938342726",label = "  "];2->3[penwidth="1.4913616938342726",label = "  "];0->4[penwidth="2.0043213737826426",label = "  "];4->4[penwidth="1.591064607026499",label = "  "];4->5[penwidth="1.2304489213782739",label = "  "];5->6[penwidth="1.2304489213782739",label = "  "];0->7[penwidth="2.0043213737826426",label = "  "];7->7[penwidth="1.591064607026499",label = "  "];7->8[penwidth="1.3617278360175928",label = "  "];8->9[penwidth="1.3617278360175928",label = "  "];9->10[color=red,penwidth="1.1760912590556813",label = "  "];0->11[penwidth="2.0043213737826426",label = "  "];11->11[penwidth="1.591064607026499",label = "  "];11->12[penwidth="1.3617278360175928",label = "  "];12->13[penwidth="1.3617278360175928",label = "  "];13->14[penwidth="0.9542425094393249",label = "  "];0->15[penwidth="2.0043213737826426",label = "  "];15->16[penwidth="1.5185139398778875",label = "  "];16->17[penwidth="1.5185139398778875",label = "  "];17->18[penwidth="1.5185139398778875",label = "  "];}

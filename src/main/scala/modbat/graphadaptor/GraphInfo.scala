@@ -18,11 +18,7 @@ class StateData(val state: State) {
       false
     } else {
       val that: StateData = other.asInstanceOf[StateData]
-
-      // TODO GR_NR: either the state reference is compared (globally) or
-      // state names locally
       this.state.name.equals(that.state.name)
-//      this.state == that.state
     }
   }
 
@@ -38,17 +34,14 @@ class StateData(val state: State) {
 class EdgeData(val transitionLabel: String, val transitionType: TransitionType, val transition: Transition) {
   val originState: Node[StateData] = new Node(new StateData(transition.origin))
   val destinationState: Node[StateData] = new Node(new StateData(transition.dest))
-  val transitionId: Int = transition.idx // ask Cyrille if transition.idx is changed during the execution
+  val transitionId: Int = transition.idx
 
   override def equals(other: Any): Boolean = {
     if (other == null || !other.isInstanceOf[EdgeData]) {
       false
     } else {
       val that: EdgeData = other.asInstanceOf[EdgeData]
-
-      // TODO GR_NR:  within the model, transition-id is unique globally
       this.transitionId.equals(that.transitionId)
-//      this.transition == that.transition
     }
   }
 

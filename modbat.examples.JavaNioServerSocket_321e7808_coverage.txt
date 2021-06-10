@@ -1,4 +1,0 @@
-modbat.examples.JavaNioServerSocket - [NODES]: 3 7 42.86
-modbat.examples.JavaNioServerSocket - [EDGES]: 0 17 0.00
-modbat.examples.JavaNioServerSocket - [EDGE_PAIRS]: 0 46 0.00
-modbat.examples.JavaNioServerSocket - [EDGE_PAIRS_INCLUSIVE]: 3 70 4.29

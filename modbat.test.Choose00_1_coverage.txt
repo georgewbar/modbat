@@ -1,4 +1,0 @@
-modbat.test.Choose00 - [NODES]: 2 2 100.00
-modbat.test.Choose00 - [EDGES]: 0 1 0.00
-modbat.test.Choose00 - [EDGE_PAIRS]: 0 0 100.00
-modbat.test.Choose00 - [EDGE_PAIRS_INCLUSIVE]: 2 3 66.67

@@ -1,9 +1,0 @@
-digraph model {
-  graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
-  node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
-  edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
-  "" [ shape = "point", height="0.1" ];
-  "" -> c1-init
-  c1-init	-> c1-init [ label = " c1-init => c1-init " ];
-  c1-init	-> c1-end [ label = " c1-init => c1-end " ];
-}

@@ -18,11 +18,7 @@ public class SimpleCounter {
     count +=2;
   }
 
-  public boolean isActive() {
-    return flag;
-  }
   public int value() {
     return count;
   }
-  public void setValue(int value) { count = value; }
 }

@@ -14,15 +14,15 @@ class Dotify(val config: Configuration, val model: ModelInstance, outFile: Strin
   val log = model.mbt.log
 
   def init: Unit = {
-    assert(outFile != "")
+    assert (outFile != "")
     val fullOutFile = config.dotDir + File.separatorChar + outFile
     try {
       out = new PrintStream(new FileOutputStream(fullOutFile), false, "UTF-8")
     } catch {
       case ioe: IOException => {
-        log.error("Cannot open file " + fullOutFile + ":")
-        log.error(ioe.getMessage)
-        throw ioe
+	log.error("Cannot open file " + fullOutFile + ":")
+	log.error(ioe.getMessage)
+	throw ioe
       }
     }
   }
@@ -46,7 +46,7 @@ class Dotify(val config: Configuration, val model: ModelInstance, outFile: Strin
   }
 
   def printTrans(tr: Transition, label: String = "", style: String = "",
-                 color: String = ""): Unit = {
+		color: String = ""): Unit = {
     val outgoing = model.transitions.filter(_.origin == tr.origin)
     val totalCov = outgoing.map(_.coverage.count).sum
     var prev = toLabel(tr.origin)
@@ -64,10 +64,10 @@ class Dotify(val config: Configuration, val model: ModelInstance, outFile: Strin
   }
 
   def printEdge(from: String, to: String, label: String, style: String,
-                color: String, cov: Double): Unit = {
+		color: String, cov: Double): Unit = {
     val buf =
       new StringBuffer("  " + from + "\t-> " + to
-        + " [ label = \"" + label + covStr(cov) + "\"")
+		       + " [ label = \"" + label + covStr(cov) + "\"")
     // add extra space before and after label because graphviz often
     // puts label right next to edge (at least graphviz version 2.26.3)
     if (style != "") {
@@ -107,9 +107,9 @@ class Dotify(val config: Configuration, val model: ModelInstance, outFile: Strin
       printTrans(tr, label)
     } else {
       val labels =
-        tr.expectedExceptions.map(t =>
-          t.toString.replace("Exception", "Exc."))
-      printTrans(tr, labels.mkString(", "), color = "red")
+	tr.expectedExceptions.map (t =>
+	  t.toString.replace("Exception", "Exc."))
+      printTrans (tr, labels.mkString(", "), color="red")
     }
     for (nextSt <- tr.nextStatePredicates) {
       printTrans(nextSt.target, addParens(label), style = "dashed")
@@ -122,20 +122,21 @@ class Dotify(val config: Configuration, val model: ModelInstance, outFile: Strin
     out.println("  orientation = landscape;")
     out.println("  graph [ rankdir = \"TB\", ranksep=\"0.4\", nodesep=\"0.2\" ];")
     out.println("  node [ fontname = \"Helvetica\", fontsize=\"12.0\"," +
-      " margin=\"0.07\" ];")
+		" margin=\"0.07\" ];")
     out.println("  edge [ fontname = \"Helvetica\", fontsize=\"12.0\"," +
-      " margin=\"0.05\" ];")
+		" margin=\"0.05\" ];")
     // initial state
     out.println("  \"\" [ shape = \"point\", height=\"0.1\" ];")
     out.println("  \"\" -> " + toLabel(model.initialState))
     for (tr <- model.transitions) {
-      if (!tr.isSynthetic) {
-        dotifyEdge(tr)
 
-        for (exc <- tr.nonDetExceptions) {
-          val label = exc.exception.toString.replace("Exception", "Exc.")
-          printTrans(exc.target, label, style = "dotted", color = "red")
-        }
+      if (!tr.isSynthetic) {
+	dotifyEdge(tr)
+
+	for (exc <- tr.nonDetExceptions) {
+	  val label = exc.exception.toString.replace("Exception", "Exc.")
+	  printTrans(exc.target, label, style = "dotted", color = "red")
+	}
       }
     }
     out.println("}")

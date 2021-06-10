@@ -80,9 +80,6 @@ abstract trait Model {
 
   def choose(min: Int, max: Int) = {
     val choice = mbt.choose(min, max)
-    // create (max - min) number of nodes that represent all choices
-    // add edges to the choice nodes from the current node (state or choice)
-
     val numChoice = NumChoice(choice) // create a number choice -Rui
     mbt.rng.recordChoice(numChoice) // record number choice -Rui
 

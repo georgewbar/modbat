@@ -1,4 +1,0 @@
-modbat.test.Time1 - [NODES]: 2 2 100.00
-modbat.test.Time1 - [EDGES]: 0 1 0.00
-modbat.test.Time1 - [EDGE_PAIRS]: 0 0 100.00
-modbat.test.Time1 - [EDGE_PAIRS_INCLUSIVE]: 2 3 66.67

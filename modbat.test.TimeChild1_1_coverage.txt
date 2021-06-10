@@ -1,4 +1,0 @@
-modbat.test.TimeChild1 - [NODES]: 2 2 100.00
-modbat.test.TimeChild1 - [EDGES]: 0 2 0.00
-modbat.test.TimeChild1 - [EDGE_PAIRS]: 0 2 0.00
-modbat.test.TimeChild1 - [EDGE_PAIRS_INCLUSIVE]: 2 6 33.33

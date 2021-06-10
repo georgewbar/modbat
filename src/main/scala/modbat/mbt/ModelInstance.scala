@@ -3,11 +3,13 @@ package modbat.mbt
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.matching.Regex
+
 import modbat.RequirementFailedException
 import modbat.dsl.Action
 import modbat.dsl.Model
@@ -27,9 +29,9 @@ import modbat.trace.TracedFields
 import modbat.trace.RecordedTransition
 import modbat.trace.TransitionResult
 import modbat.dsl.Weight
-import modbat.graphadaptor.GraphAdaptor
 import modbat.log.Log
 
+import modbat.graphadaptor.GraphAdaptor
 import java.io.File
 
 class ModelInstance (val mbt: MBT, val model: Model,
@@ -49,7 +51,7 @@ class ModelInstance (val mbt: MBT, val model: Model,
   val mIdx = mbt.launchedModels.count(_.className.equals(className)) // mIdx gives the ID of the model -Rui
   def name = className + "-" + (mIdx + 1)
 
-  // graph instance of model - Nour and George
+  // graph instance of model
   var graph: GraphAdaptor = _
 
   /* isChild is true when coverage information of initial instance is
@@ -153,8 +155,6 @@ class ModelInstance (val mbt: MBT, val model: Model,
       val graph: GraphAdaptor = new GraphAdaptor(mbt.config, this)
       graph.printGraphTo(mbt.config.dotDir + File.separator + this.className + "_graph.dot")
       graph.updateTestRequirements()
-//      graph.setOutStream(mbt.origLog.out) // TODO: comment later or change to work in debug mode
-//      graph.setErrStream(mbt.origLog.err) // TODO: comment later or change to work in debug mode
       this.graph = graph
     }
 

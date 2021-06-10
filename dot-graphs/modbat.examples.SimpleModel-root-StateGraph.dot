@@ -1,9 +1,0 @@
-digraph model {
-  orientation = portrait;
-  graph [ rankdir = "TB", ranksep="0.08", nodesep="0.18", size="8!" ];
-  node [ fontname = "Helvetica", fontsize="11.0", shape="ellipse", margin="0.01", height="0.1", width="0.5" ];
-  edge [ fontname = "Helvetica", arrowsize=".3", arrowhead="normal", fontsize="6.0", margin="0.05" ];
-None [shape=none, style=invis, width=0.1, height=0.1];
-None->reset;
-{rank = source; None}
-reset->zero[penwidth="2.0043213737826426",label = " "];zero->two[penwidth="1.6720978579357175",label = " "];two->end[penwidth="1.9395192526186185",label = " "];zero->zero[penwidth="1.591064607026499",label = " "];zero->one[penwidth="1.7403626894942439",label = " "];one->two[penwidth="1.7403626894942439",label = " "];two->end[color=red,penwidth="1.1760912590556813",label = " "];}

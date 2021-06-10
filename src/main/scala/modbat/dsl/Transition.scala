@@ -59,7 +59,7 @@ class Transition (val model:            Model,
       val t =
         new Transition(model, origin, nextSt._2, true,
                        new Action(model, action.transfunc),
-                        nextSt._4._1, nextSt._4._2)
+                       nextSt._4._1, nextSt._4._2)
       if (len > 1) {
         t.n = i
       }

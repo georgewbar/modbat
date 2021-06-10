@@ -227,7 +227,6 @@ class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
 
         // create edge data for all nextIf (deterministic) transitions and maybeNextif (non-deterministic) transitions
         for (nextStatePredicate <- transition.nextStatePredicates) {
-          // ask Cyrille about label to override: ( "original transition label" )
           val overridingTransitionEdgeData = new EdgeData(
             transitionLabel = addParens(transitionEdgeData.transitionLabel),
             transitionType = NormalTransition(isDeterministic = !nextStatePredicate.nonDet),
