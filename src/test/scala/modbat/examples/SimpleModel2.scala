@@ -37,4 +37,5 @@ class SimpleModel2 extends Model {
   "ran_num_p_2" -> "end" := {
     assert(counter.value == 5)
   }
+  "ran_num" -> "end" := skip
 }

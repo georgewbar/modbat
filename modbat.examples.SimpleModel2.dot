@@ -1,5 +1,4 @@
 digraph model {
-//  orientation = landscape;
   graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
   node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
   edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
@@ -14,4 +13,5 @@ digraph model {
   two	-> end [ label = " assert " ];
   ran_num	-> ran_num_p_2 [ label = " inc2 " ];
   ran_num_p_2	-> end [ label = " assert " ];
+  ran_num	-> end [ label = " skip " ];
 }

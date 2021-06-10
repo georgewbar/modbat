@@ -5,6 +5,7 @@ digraph model {
   "" [ shape = "point", height="0.1" ];
   "" -> reset
   ran_num	-> ran_num_p_2 [ label = " inc2 " ];
+  ran_num	-> end [ label = " skip " ];
   one	-> two [ label = " inc " ];
   reset	-> zero [ label = " new SimpleCounter " ];
   reset	-> ran_num [ label = " setValue " ];
