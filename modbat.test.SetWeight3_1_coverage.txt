@@ -1,0 +1,4 @@
+modbat.test.SetWeight3 - [NODES]: 3 3 100.00
+modbat.test.SetWeight3 - [EDGES]: 0 3 0.00
+modbat.test.SetWeight3 - [EDGE_PAIRS]: 0 3 0.00
+modbat.test.SetWeight3 - [EDGE_PAIRS_INCLUSIVE]: 3 9 33.33

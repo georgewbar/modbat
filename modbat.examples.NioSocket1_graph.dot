@@ -1,0 +1,27 @@
+digraph model {
+  graph [ rankdir = "TB", ranksep="0.4", nodesep="0.2" ];
+  node [ fontname = "Helvetica", fontsize="12.0", margin="0.07" ];
+  edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
+  "" [ shape = "point", height="0.1" ];
+  "" -> reset
+  connected	-> err [ label = " AlreadyConnectedException " color = "red" ];
+  connected	-> connected [ label = " connected => connected (1) " ];
+  connected	-> connected [ label = " connected => connected (2) " ];
+  connected	-> closed [ label = " connected => closed " ];
+  reset	-> open [ label = " reset => open " ];
+  maybeconnected	-> maybeconnected [ label = " maybeconnected => maybeconnected (1) " ];
+  maybeconnected	-> connected [ label = " maybeconnected => connected " ];
+  maybeconnected	-> maybeconnected [ label = " maybeconnected => maybeconnected (2) " ];
+  maybeconnected	-> connected [ label = " (maybeconnected => maybeconnected (2)) " style = "dashed" ];
+  maybeconnected	-> err [ label = " ConnectionPendingException " color = "red" ];
+  maybeconnected	-> err [ label = " NotYetConnectedException " color = "red" ];
+  maybeconnected	-> closed [ label = " maybeconnected => closed " ];
+  open	-> open [ label = " open => open " ];
+  open	-> connected [ label = " open => connected " ];
+  open	-> maybeconnected [ label = " open => maybeconnected " ];
+  open	-> err [ label = " NoConnectionPendingException " color = "red" ];
+  open	-> err [ label = " NotYetConnectedException " color = "red" ];
+  open	-> closed [ label = " open => closed " ];
+  closed	-> closed [ label = " closed => closed " ];
+  closed	-> err [ label = " ClosedChannelException " color = "red" ];
+}

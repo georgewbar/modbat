@@ -1,0 +1,4 @@
+modbat.test.InvokeTransition3 - [NODES]: 2 3 66.67
+modbat.test.InvokeTransition3 - [EDGES]: 0 3 0.00
+modbat.test.InvokeTransition3 - [EDGE_PAIRS]: 0 3 0.00
+modbat.test.InvokeTransition3 - [EDGE_PAIRS_INCLUSIVE]: 2 9 22.22
