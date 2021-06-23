@@ -4,14 +4,10 @@ digraph model {
   edge [ fontname = "Helvetica", fontsize="12.0", margin="0.05" ];
   "" [ shape = "point", height="0.1" ];
   "" -> reset
+  one	-> two [ label = " inc " ];
+  one	-> end [ label = " assert " ];
   reset	-> zero [ label = " new SimpleCounter " ];
-  reset	-> ran_num [ label = " setValue " ];
+  two	-> end [ label = " assert " ];
   zero	-> zero [ label = " toggleSwitch " ];
   zero	-> one [ label = " inc " ];
-  one	-> two [ label = " inc " ];
-  zero	-> two [ label = " inc2 " ];
-  two	-> end [ label = " assert " ];
-  ran_num	-> ran_num_p_2 [ label = " inc2 " ];
-  ran_num_p_2	-> end [ label = " assert " ];
-  ran_num	-> end [ label = " skip " ];
 }

@@ -6,4 +6,4 @@ digraph model {
 None [shape=none, style=invis, width=0.1, height=0.1];
 None->reset;
 {rank = source; None}
-reset->zero[color=red,penwidth="1.0413926851582251",label = " "];reset->one[penwidth="1.3222192947339193",label = " "];}
+reset->zero[penwidth="2.0043213737826426",label = " "];zero->zero[penwidth="1.9590413923210936",label = " "];zero->zero[style=dotted, color=blue,penwidth="1.6127838567197355",label = " "];zero->one[penwidth="2.0043213737826426",label = " "];one->two[penwidth="1.7853298350107671",label = " "];two->end[penwidth="1.7853298350107671",label = " "];one->end[penwidth="1.6127838567197355",label = " "];}
