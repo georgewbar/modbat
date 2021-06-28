@@ -354,6 +354,29 @@ class Modbat(val mbt: MBT) {
     }
   }
 
+  private def coverTestRequirementsOnGraph(modelName: String, modelInst: ModelInstance): Unit = {
+    val coveredStates = modelInst.states.values.count(_.coverage.isCovered)
+    val totalStates = modelInst.states.size
+    val statesCoveredPercent = if (totalStates == 0) 100 else coveredStates * 100 / totalStates
+
+    val coveredEdges = modelInst.graph.getEdgesCovered
+    val totalEdges = modelInst.graph.getTotalEdges
+    val edgesCoveredPercent = if (totalEdges == 0) 100 else coveredEdges * 100 / totalEdges
+
+    val coveredEdgePairs = modelInst.graph.getEdgePairsCovered
+    val totalEdgePairs = modelInst.graph.getTotalEdgePairs
+    val edgePairsCoveredPercent = if (totalEdgePairs == 0) 100 else coveredEdgePairs * 100 / totalEdgePairs
+
+    mbt.log.info(s"$modelName: Nodes covered: $coveredStates, Total: $totalStates, " +
+      s"Percent: $statesCoveredPercent %")
+
+    mbt.log.info(s"$modelName: Edges covered: $coveredEdges, Total: $totalEdges, " +
+      s"Percent: $edgesCoveredPercent %")
+
+    mbt.log.info(s"$modelName: Edge-pairs covered: $coveredEdgePairs, Total: $totalEdgePairs, " +
+      s"Percent: $edgePairsCoveredPercent %")
+  }
+
   def coverage: Unit = {
 
     if (mbt.config.dotifyPathCoverage) {
@@ -387,60 +410,11 @@ class Modbat(val mbt: MBT) {
         modelStr + nCoveredTrans + " transitions covered (" +
           nCoveredTrans * 100 / nTrans + " % out of " + nTrans + ").")
 
-      // display edge-pair coverage (nodes, edges, edge-pairs)
-      val coveredStates = modelInst.states.values.count(_.coverage.isCovered)
-      val totalStates = modelInst.states.size
-      val statesCoveredPercent = if (totalStates == 0) 100.0d else coveredStates * 100.0d / totalStates
-
-      val coveredEdges = modelInst.graph.getEdgesCovered
-      val totalEdges = modelInst.graph.getTotalEdges
-      val edgesCoveredPercent = if (totalEdges == 0) 100.0d else coveredEdges * 100.0d / totalEdges
-
-      val coveredEdgePairs = modelInst.graph.getEdgePairsCovered
-      val totalEdgePairs = modelInst.graph.getTotalEdgePairs
-      val edgePairsCoveredPercent = if (totalEdgePairs == 0) 100.0d else coveredEdgePairs * 100.0d / totalEdgePairs
-
-      mbt.log.info(s"$modelName: States covered (NEW): $coveredStates, Total: $totalStates, " +
-        s"Percent: ${BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
-
-      mbt.log.info(s"$modelName: Edges covered (NEW): $coveredEdges, Total: $totalEdges, " +
-        s"Percent: ${BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
-
-      mbt.log.info(s"$modelName: Edge-pairs covered (NEW): $coveredEdgePairs, Total: $totalEdgePairs, " +
-        s"Percent: ${BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
-
-      // edge-pair coverage including nodes, edges, edge-pairs
-      val coveredEdgePairsIncl = coveredStates + coveredEdges + coveredEdgePairs
-      val totalEdgePairsIncl = totalStates + totalEdges + totalEdgePairs
-      val edgePairsInclCoveredPercent = if (totalEdgePairsIncl == 0) 100.0d else
-        coveredEdgePairsIncl * 100.0d / totalEdgePairsIncl
-
-      mbt.log.info(s"$modelName: Edge-pairs (including nodes, edge, edge-pairs) covered (NEW): $coveredEdgePairsIncl, " +
-        s"Total: $totalEdgePairsIncl, " +
-        s"Percent: ${BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP)}")
-
-      val coverageInfoOut = new PrintStream(mbt.config.logPath + File.separator +
-        modelName + "_" + mbt.config.randomSeed.toHexString + "_coverage.txt")
-
-      // output to file for later analysis
-      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "NODES",
-        coveredStates.toString, totalStates.toString,
-        BigDecimal(statesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
-
-      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGES",
-        coveredEdges.toString, totalEdges.toString,
-        BigDecimal(edgesCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
-
-      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGE_PAIRS",
-        coveredEdgePairs.toString, totalEdgePairs.toString,
-        BigDecimal(edgePairsCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
-
-      coverageInfoOut.printf("%s - [%s]: %s %s %s%n", modelName, "EDGE_PAIRS_INCLUSIVE",
-        coveredEdgePairsIncl.toString, totalEdgePairsIncl.toString,
-        BigDecimal(edgePairsInclCoveredPercent).setScale(2, BigDecimal.RoundingMode.HALF_UP).toString())
-
-      coverageInfoOut.flush()
-      coverageInfoOut.close()
+      // display edge-pair coverage (nodes, edges, edge-pairs).
+      // Note: this feature works only if --dotify-path-coverage option is activated.
+      if (mbt.config.dotifyPathCoverage) {
+        coverTestRequirementsOnGraph(modelName, modelInst)
+      }
     }
 
     preconditionCoverage

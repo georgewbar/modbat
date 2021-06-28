@@ -3,13 +3,11 @@ package modbat.mbt
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.matching.Regex
-
 import modbat.RequirementFailedException
 import modbat.dsl.Action
 import modbat.dsl.Model
@@ -33,6 +31,7 @@ import modbat.log.Log
 
 import modbat.graphadaptor.GraphAdaptor
 import java.io.File
+import java.io.IOException
 
 class ModelInstance (val mbt: MBT, val model: Model,
                      val trans: List[Transition]) {
@@ -118,15 +117,14 @@ class ModelInstance (val mbt: MBT, val model: Model,
   }
 
   def addAndLaunch(firstLaunch: Boolean) = {
-    var isFirstInstance = false
-    if (mbt.firstInstance.contains(className)) {
+    val isFirstInstance = !mbt.firstInstance.contains(className)
+    if (!isFirstInstance) {
       val master =
          initChildInstance(className, trans.toArray)
       regSynthTrans(true)
       registerStateSelfTrans(model, true)
       TransitionCoverage.reuseCoverageInfo(this, master, className)
     } else {
-      isFirstInstance = true
       mbt.firstInstance.put(className, this)
       init (false)
       regSynthTrans(false)
@@ -149,11 +147,25 @@ class ModelInstance (val mbt: MBT, val model: Model,
     currentState = initialState
     StateCoverage.cover(initialState)
 
-    // get first instance of model to add the graph to it
-//    val firstModelInstance: ModelInstance = mbt.firstInstance.getOrElse(this.className, sys.error("Illegal state"))
+    // If this model instance is the first instance of the model,
+    // create and store a graph data structure representing it.
     if (isFirstInstance) {
       val graph: GraphAdaptor = new GraphAdaptor(mbt.config, this)
-      graph.printGraphTo(mbt.config.dotDir + File.separator + this.className + "_graph.dot")
+
+      // print graph to a dot file if such a file exists or possible to create.
+      // Otherwise, log a warning that the file could not be opened.
+      // Note: graph is printed to a file only when --dotify-path-coverage option is active
+      if (mbt.config.dotifyPathCoverage) {
+        val dotFileName = mbt.config.dotDir + File.separator + this.className + "_graph.dot"
+        try {
+          graph.printGraphTo(dotFileName)
+        } catch {
+          case ioe: IOException =>
+            mbt.log.error(s"Can not open file $dotFileName")
+            mbt.log.error(ioe.getMessage)
+        }
+      }
+
       graph.updateTestRequirements()
       this.graph = graph
     }

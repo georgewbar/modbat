@@ -7,6 +7,11 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a graph data structure. It is used
+ * to generate test requirements (edge and edge-pair test requirements),
+ * and to cover the generated test requirements using an execution path.
+ */
 public class Graph<NT, ET> {
     private Node<NT> root;
     private final Map<Node<NT>, List<Edge<NT, ET>>> adjacencyMap;

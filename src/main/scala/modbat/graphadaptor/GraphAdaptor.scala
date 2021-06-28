@@ -4,15 +4,21 @@ import modbat.dsl.{State, Transition}
 import modbat.graph.{Edge, Graph, Node}
 import modbat.mbt.{Configuration, ModelInstance}
 
-import java.io.{File, FileOutputStream, IOException, PrintStream}
+import java.io.{FileOutputStream, IOException, PrintStream}
 import scala.collection.JavaConverters.{asScalaBufferConverter, asScalaSetConverter, bufferAsJavaListConverter, mapAsScalaMapConverter}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
+/**
+  * This class represents a graph adaptor (of class [[Graph]]). It is mainly
+  * used to store a (sub-)model as a graph data structure. It is used to
+  * generate test requirements (edges and edge-pair) and to cover the
+  * generated test requirements using an execution path.
+  */
 class GraphAdaptor(val config: Configuration, val model: ModelInstance) {
   // log that could be used for debugging purposes
   //  private val log = model.mbt.log
-  private var errStream: PrintStream = _;
+  private var errStream: PrintStream = _
 
   /*
      "graph" is a public field representing the model instance.

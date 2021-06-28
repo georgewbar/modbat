@@ -350,6 +350,15 @@ run 0 $APP --mode=dot --show-choices modbat.test.ChooseTest
 savemv modbat.test.ChooseTest.dot chooseTest.dot
 checkfile chooseTest.dot
 
+# dot file representing the graph used in edge-pair coverage; --dot-dir exist
+run 0 $APP --no-redirect-out -n=1 --dotify-path-coverage -s=7 modbat.test.ChooseTest
+savemv modbat.test.ChooseTest_graph.dot chooseTest_graph.dot
+checkfile chooseTest_graph.dot
+
+# dot file representing the graph used in edge-pair coverage; --dot-dir does NOT exist
+# This leads to an exit with error.
+run 1 $APP --no-redirect-out -n=1 --dotify-path-coverage --dot-dir=dirnotexist -s=7 modbat.test.ChooseTest
+
 # delete log files on success
 run 0 $APP -s=1 -n=2 --remove-log-on-success modbat.test.Hello
 

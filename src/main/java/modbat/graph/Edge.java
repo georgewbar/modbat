@@ -2,6 +2,9 @@ package modbat.graph;
 
 import java.util.Objects;
 
+/**
+ * This class represents an edge used in {@link Graph}.
+ */
 public class Edge<NT, ET> {
     private Node<NT> from;
     private Node<NT> to;

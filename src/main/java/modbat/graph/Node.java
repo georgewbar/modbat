@@ -2,6 +2,9 @@ package modbat.graph;
 
 import java.util.Objects;
 
+/**
+ * This class represents a node used in {@link Graph}.
+ */
 public class Node<NT> {
     private NT data;
 
